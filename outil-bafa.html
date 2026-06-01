@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outil séance BAFA/BAFD — PACA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1D9E75;--green-dark:#0F6E56;--green-darker:#085041;
+  --green-light:#E1F5EE;--green-mid:#9FE1CB;
+  --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+  --amber:#BA7517;--amber-light:#FAEEDA;
+  --gray:#888780;--gray-light:#F1EFE8;--gray-dark:#444441;
+  --red:#E24B4A;--red-light:#FCEBEB;--red-dark:#A32D2D;
+  --text:#1a1a1a;--text-muted:#666;--text-hint:#999;
+  --bg:#fff;--bg-surface:#f7f7f5;--bg-hover:#f0f0ec;
+  --border:#e0e0da;--border-mid:#ccc;--radius:8px;--radius-lg:12px
+}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg-surface);color:var(--text);min-height:100vh;font-size:14px}
+
+/* NAV */
+.nav-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100}
+.nav-logo{font-size:15px;font-weight:600;color:var(--green-dark);padding:1rem 1rem 1rem 0;margin-right:1rem;border-right:1px solid var(--border);white-space:nowrap}
+.nav-logo span{color:var(--text-muted);font-weight:400}
+.nav-tab{padding:.875rem 1.25rem;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text-muted);transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--green-dark);border-bottom-color:var(--green);font-weight:500}
+
+/* LAYOUT */
+.page{display:none;padding:1.5rem;max-width:860px;margin:0 auto}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--text)}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:.875rem}
+.field label{font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;font-weight:500}
+.field input,.field textarea,.field select{width:100%;font-size:13px;padding:8px 10px;border-radius:var(--radius);border:1px solid var(--border-mid);background:var(--bg);color:var(--text);outline:none;transition:border .15s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--green)}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5}
+
+/* CHECKBOXES */
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.check-grid.cols1{grid-template-columns:1fr}
+.check-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;padding:8px 10px;border-radius:var(--radius);border:1px solid var(--border);cursor:pointer;background:var(--bg);transition:all .15s;color:var(--text);user-select:none}
+.check-item:hover{border-color:var(--green)}
+.check-item.on{background:var(--green-light);border-color:var(--green);color:var(--green-darker)}
+.check-item input{margin-top:2px;flex-shrink:0;accent-color:var(--green);pointer-events:none}
+
+/* SLIDERS */
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:.75rem}
+.slider-row label{font-size:13px;color:var(--text-muted);min-width:110px}
+.slider-row input[type=range]{flex:1;accent-color:var(--green)}
+.slider-val{font-size:13px;font-weight:600;min-width:44px;text-align:right;color:var(--green-dark)}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-mid);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--bg-hover)}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff;font-weight:500}
+.btn.primary:hover{background:var(--green-dark)}
+.btn.sm{padding:5px 12px;font-size:12px}
+.btn.danger{border-color:var(--red);color:var(--red-dark)}
+.btn.danger:hover{background:var(--red-light)}
+.btn.ghost{border-color:transparent}
+.btn.ghost:hover{background:var(--bg-hover);border-color:var(--border)}
+
+/* PROGRESS */
+.progress{display:flex;gap:4px;margin-bottom:1.5rem}
+.ps{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background .3s}
+.ps.done{background:var(--green)}.ps.active{background:var(--green-dark)}
+
+/* BADGES */
+.badge{font-size:11px;padding:2px 8px;border-radius:10px;display:inline-block;margin:2px}
+.badge.sfg{background:var(--green-light);color:var(--green-darker)}
+.badge.sa{background:#EEEDFE;color:#3C3489}
+.badge.valide{background:#EAF3DE;color:#27500A}
+.badge.attente{background:var(--amber-light);color:#633806}
+.badge.content{background:var(--bg-surface);color:var(--text-muted);border:1px solid var(--border)}
+
+/* FICHE CARDS */
+.fiche-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem}
+.fiche-card-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.fiche-card-body{padding:1rem 1.25rem}
+.fiche-titre{font-size:14px;font-weight:600;margin-bottom:4px}
+.fiche-meta{font-size:12px;color:var(--text-muted)}
+.score-pill{text-align:right;flex-shrink:0}
+.score-num{font-size:20px;font-weight:700;color:var(--green-dark)}
+.score-bar{width:56px;height:3px;background:var(--border);border-radius:2px;margin:4px 0 0 auto}
+.score-fill{height:100%;background:var(--green);border-radius:2px}
+.fiche-row{display:flex;gap:8px;margin-bottom:6px;font-size:12px}
+.fiche-row .k{color:var(--text-muted);min-width:130px;flex-shrink:0}
+.fiche-row .v{color:var(--text);flex:1}
+.phase-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.75rem}
+.phase-row{display:grid;grid-template-columns:90px 1fr}
+.phase-lbl{padding:10px 12px;font-size:12px;font-weight:600;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;align-items:flex-start;gap:5px}
+.phase-txt{padding:10px 12px;font-size:12px;color:var(--text);line-height:1.5}
+.phase-row+.phase-row .phase-lbl,.phase-row+.phase-row .phase-txt{border-top:1px solid var(--border)}
+
+/* LISTE CONTRIBUTEUR */
+.fiche-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.fiche-item-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;text-align:center}
+.stat-n{font-size:26px;font-weight:700;color:var(--green)}
+.stat-l{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+/* RECHERCHE CHIPS */
+.chip-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.chip{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;transition:all .15s;color:var(--text)}
+.chip:hover{border-color:var(--green);color:var(--green-dark)}
+.chip.on{background:var(--green-light);border-color:var(--green);color:var(--green-darker);font-weight:500}
+
+/* STEP NAV */
+.step-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem}
+.step-nav-right{display:flex;gap:8px}
+
+/* EMPTY */
+.empty{text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px}
+.empty i{font-size:32px;display:block;margin-bottom:12px;opacity:.3}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--green-dark);color:#fff;font-size:13px;padding:10px 20px;border-radius:var(--radius-lg);display:none;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+
+/* RECHERCHE */
+.search-filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.filter-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem}
+.filter-block.full{grid-column:span 2}
+.filter-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+
+/* PHASE FORM */
+.phase-form{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.75rem}
+.phase-form-row{display:grid;grid-template-columns:90px 1fr}
+.phase-form-lbl{padding:10px 12px;font-size:12px;font-weight:600;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;align-items:center;gap:5px}
+.phase-form-lbl.l{color:var(--green-dark)}.phase-form-lbl.d{color:var(--blue-dark)}.phase-form-lbl.c{color:var(--amber)}
+.phase-form-row+.phase-form-row .phase-form-lbl,.phase-form-row+.phase-form-row textarea{border-top:1px solid var(--border)}
+.phase-form-row textarea{border:none;border-radius:0;background:var(--bg);width:100%;resize:none;min-height:64px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;font-family:inherit}
+
+/* MOBILE */
+@media(max-width:600px){
+  .search-filters{grid-template-columns:1fr}
+  .filter-block.full{grid-column:span 1}
+  .check-grid{grid-template-columns:1fr}
+  .stat-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <div class="nav-logo">Séances BAFA/BAFD <span>PACA</span></div>
+  <button class="nav-tab active" onclick="showPage('recherche',this)"><i class="ti ti-search" style="font-size:14px"></i> Trouver une fiche</button>
+  <button class="nav-tab" onclick="showPage('contribuer',this)"><i class="ti ti-plus" style="font-size:14px"></i> Saisir une fiche</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<!-- ═══════════════════════════════════════════════ PAGE RECHERCHE -->
+<div class="page active" id="page-recherche">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
+    <div>
+      <div style="font-size:18px;font-weight:600">Trouver une fiche séance</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Filtrez par vos contraintes, l'outil propose les fiches les plus adaptées</div>
+    </div>
+    <button class="btn sm" onclick="resetRecherche()"><i class="ti ti-refresh" style="font-size:13px"></i> Réinitialiser</button>
+  </div>
+
+  <div class="search-filters">
+    <div class="filter-block">
+      <div class="filter-label">Type de session</div>
+      <div class="chip-grid">
+        <div class="chip" onclick="toggleFilter('session','SFG',this)">Formation générale</div>
+        <div class="chip" onclick="toggleFilter('session','SA',this)">Approfondissement</div>
+      </div>
+    </div>
+    <div class="filter-block">
+      <div class="filter-label">Objectif</div>
+      <div class="chip-grid" style="flex-direction:column">
+        <div class="chip" onclick="toggleFilter('objectif','transmettre',this)">Transmettre une connaissance</div>
+        <div class="chip" onclick="toggleFilter('objectif','posture',this)">Construire une posture</div>
+        <div class="chip" onclick="toggleFilter('objectif','competence',this)">Développer une compétence</div>
+      </div>
+    </div>
+    <div class="filter-block full">
+      <div class="filter-label">Contenu traité</div>
+      <div class="chip-grid">
+        <div class="chip" onclick="toggleFilter('contenu','Liberté, autorité, sanction',this)">Liberté, autorité, sanction</div>
+        <div class="chip" onclick="toggleFilter('contenu','Responsabilité civile et pénale',this)">Responsabilité civile et pénale</div>
+        <div class="chip" onclick="toggleFilter('contenu','Laïcité',this)">Laïcité</div>
+        <div class="chip" onclick="toggleFilter('contenu','Violences sexistes et sexuelles',this)">Violences sexistes et sexuelles</div>
+        <div class="chip" onclick="toggleFilter('contenu','Connaissance des publics',this)">Connaissance des publics</div>
+        <div class="chip" onclick="toggleFilter('contenu','Réglementation ACM',this)">Réglementation ACM</div>
+        <div class="chip" onclick="toggleFilter('contenu','Construction d\'une grande animation',this)">Grande animation</div>
+        <div class="chip" onclick="toggleFilter('contenu','Positionnement de l\'animateur',this)">Positionnement de l'animateur</div>
+        <div class="chip" onclick="toggleFilter('contenu','Gestion sanitaire',this)">Gestion sanitaire</div>
+      </div>
+    </div>
+    <div class="filter-block">
+      <div class="filter-label">Durée disponible</div>
+      <div class="slider-row" style="margin-bottom:0">
+        <input type="range" min="30" max="240" step="15" value="120" id="r-duree" oninput="renderResultats()" style="flex:1;accent-color:var(--green)">
+        <span class="slider-val" id="rv-duree">120 min</span>
+      </div>
+    </div>
+    <div class="filter-block">
+      <div class="filter-label">Taille du groupe</div>
+      <div class="slider-row" style="margin-bottom:0">
+        <input type="range" min="5" max="30" step="1" value="15" id="r-stag" oninput="renderResultats()" style="flex:1;accent-color:var(--green)">
+        <span class="slider-val" id="rv-stag">15</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+    <div style="font-size:13px;font-weight:500" id="resultat-count"></div>
+  </div>
+  <div id="resultats"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PAGE CONTRIBUER -->
+<div class="page" id="page-contribuer">
+
+  <div id="vue-liste-contrib">
+    <div class="stat-row" id="stats-contrib"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <div style="font-size:18px;font-weight:600">Bibliothèque de fiches</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn sm" onclick="exportJSON()"><i class="ti ti-download" style="font-size:13px"></i> Exporter</button>
+        <button class="btn sm primary" onclick="showFormContrib()"><i class="ti ti-plus" style="font-size:13px"></i> Nouvelle fiche</button>
+      </div>
+    </div>
+    <div id="liste-contrib"></div>
+  </div>
+
+  <div id="vue-form-contrib" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+      <button class="btn ghost sm" onclick="retourListe()"><i class="ti ti-arrow-left" style="font-size:14px"></i></button>
+      <div style="font-size:16px;font-weight:600" id="form-titre-page">Nouvelle fiche</div>
+    </div>
+    <div class="progress" id="form-prog">
+      <div class="ps active" id="fp0"></div><div class="ps" id="fp1"></div>
+      <div class="ps" id="fp2"></div><div class="ps" id="fp3"></div><div class="ps" id="fp4"></div>
+    </div>
+
+    <!-- STEP 0 -->
+    <div id="fstep0">
+      <div class="card"><div class="card-title">Identification</div>
+        <div class="field"><label>Titre de la séance</label><input id="f-titre" type="text" placeholder="ex. Débat mouvant — liberté et autorité"></div>
+        <div class="field"><label>Auteur(s)</label><input id="f-auteur" type="text" placeholder="Prénom NOM"></div>
+        <div class="field"><label>Type de session</label>
+          <div class="check-grid">
+            <div class="check-item" onclick="tog(this,'fsession','SFG')"><input type="checkbox"> Formation générale (SFG)</div>
+            <div class="check-item" onclick="tog(this,'fsession','SA')"><input type="checkbox"> Approfondissement (SA)</div>
+          </div>
+        </div>
+      </div>
+      <div class="step-nav"><span></span><div class="step-nav-right"><button class="btn" onclick="retourListe()">Annuler</button><button class="btn primary" onclick="fs(1)">Suivant</button></div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="fstep1" style="display:none">
+      <div class="card"><div class="card-title">Contenu et objectif</div>
+        <div class="field"><label>Contenu principal</label><div class="check-grid" id="fcontenu-grid"></div></div>
+        <div class="field" style="margin-top:.5rem"><label>Nature de l'objectif</label>
+          <div class="check-grid cols1">
+            <div class="check-item" onclick="tog(this,'fobjectif','transmettre')"><input type="checkbox"> Transmettre une connaissance (savoir précis, vérifiable)</div>
+            <div class="check-item" onclick="tog(this,'fobjectif','posture')"><input type="checkbox"> Construire une posture (réflexion, façon d'être)</div>
+            <div class="check-item" onclick="tog(this,'fobjectif','competence')"><input type="checkbox"> Développer une compétence opérationnelle (savoir-faire)</div>
+          </div>
+        </div>
+        <div class="field"><label>Formulation de l'objectif</label><textarea id="f-objectif" placeholder="À l'issue de cette séance, le stagiaire sera capable de..."></textarea></div>
+      </div>
+      <div class="step-nav"><button class="btn" onclick="fs(0)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="fs(2)">Suivant</button></div></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="fstep2" style="display:none">
+      <div class="card"><div class="card-title">Connaissances à transmettre</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:.75rem">Listez les savoirs précis que le stagiaire devra avoir acquis (une ligne par savoir).</div>
+        <div id="fconn-fields"></div>
+      </div>
+      <div class="step-nav"><button class="btn" onclick="fs(1)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="fs(3)">Suivant</button></div></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="fstep3" style="display:none">
+      <div class="card"><div class="card-title">Déroulé en 3 phases</div>
+        <div class="phase-form">
+          <div class="phase-form-row"><div class="phase-form-lbl l"><i class="ti ti-player-play" style="font-size:12px"></i>Lancement</div><textarea id="f-lancement" placeholder="Accroche, mise en situation, brise-glace..."></textarea></div>
+          <div class="phase-form-row"><div class="phase-form-lbl d"><i class="ti ti-tools" style="font-size:12px"></i>Développement</div><textarea id="f-dev" placeholder="Méthode principale, activité, apport formateur..."></textarea></div>
+          <div class="phase-form-row"><div class="phase-form-lbl c"><i class="ti ti-check" style="font-size:12px"></i>Clôture</div><textarea id="f-cloture" placeholder="Synthèse, vérification des acquis, question bilan..."></textarea></div>
+        </div>
+        <div class="field"><label>Méthode principale</label><div class="check-grid" id="fmethode-grid"></div></div>
+        <div class="field"><label>Justification du choix de méthode</label><textarea id="f-justif" placeholder="Pourquoi cette méthode pour ce contenu et cet objectif ?"></textarea></div>
+        <div class="field"><label>Points de vigilance</label><textarea id="f-vigilance" placeholder="À quel moment le contenu doit-il primer sur la méthode ? Risques de dérive ?"></textarea></div>
+      </div>
+      <div class="step-nav"><button class="btn" onclick="fs(2)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="fs(4)">Suivant</button></div></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div id="fstep4" style="display:none">
+      <div class="card"><div class="card-title">Contexte et contraintes</div>
+        <div class="slider-row"><label style="font-size:13px;color:var(--text-muted);min-width:110px">Durée (min)</label><input type="range" min="30" max="240" step="15" value="90" id="f-duree" oninput="fsv()" style="flex:1;accent-color:var(--green)"><span class="slider-val" id="fsv-duree">90 min</span></div>
+        <div class="slider-row"><label style="font-size:13px;color:var(--text-muted);min-width:110px">Nb stagiaires</label><input type="range" min="5" max="30" step="1" value="12" id="f-stag" oninput="fsv()" style="flex:1;accent-color:var(--green)"><span class="slider-val" id="fsv-stag">12</span></div>
+        <div class="slider-row"><label style="font-size:13px;color:var(--text-muted);min-width:110px">Nb formateurs</label><input type="range" min="1" max="4" step="1" value="2" id="f-form" oninput="fsv()" style="flex:1;accent-color:var(--green)"><span class="slider-val" id="fsv-form">2</span></div>
+        <div class="field" style="margin-top:.5rem"><label>Salle disponible</label>
+          <div class="check-grid">
+            <div class="check-item" onclick="tog(this,'fsalle','Grande salle modulable')"><input type="checkbox"> Grande salle modulable</div>
+            <div class="check-item" onclick="tog(this,'fsalle','Salle de classe standard')"><input type="checkbox"> Salle de classe standard</div>
+            <div class="check-item" onclick="tog(this,'fsalle','Espace extérieur')"><input type="checkbox"> Espace extérieur</div>
+            <div class="check-item" onclick="tog(this,'fsalle','Plusieurs petites salles')"><input type="checkbox"> Plusieurs petites salles</div>
+          </div>
+        </div>
+        <div class="field"><label>Matériel disponible</label>
+          <div class="check-grid">
+            <div class="check-item" onclick="tog(this,'fmateriel','Vidéoprojecteur + paperboard')"><input type="checkbox"> Vidéoprojecteur + paperboard</div>
+            <div class="check-item" onclick="tog(this,'fmateriel','Paperboard uniquement')"><input type="checkbox"> Paperboard uniquement</div>
+            <div class="check-item" onclick="tog(this,'fmateriel','Matériel complet')"><input type="checkbox"> Matériel complet</div>
+            <div class="check-item" onclick="tog(this,'fmateriel','Minimal')"><input type="checkbox"> Minimal (feuilles, stylos)</div>
+          </div>
+        </div>
+      </div>
+      <div class="step-nav"><button class="btn" onclick="fs(3)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="saveFiche()"><i class="ti ti-check" style="font-size:13px"></i> Enregistrer</button></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONTENUS=['Liberté, autorité, sanction','Responsabilité civile et pénale','Laïcité','Violences sexistes et sexuelles','Connaissance des publics','Réglementation ACM','Construction d\'une grande animation','Positionnement de l\'animateur','Gestion sanitaire'];
+const METHODES=['Débat mouvant','Jeu de rôle','Étude de cas','Travail en sous-groupes','Apport magistral','Photo-langage','Quiz / jeu pédagogique','Projet collectif','Simulation','Autre'];
+const FICHES_DEFAUT=[
+  {id:'d1',titre:'Le cadre légal en jeu de rôle',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Responsabilité civile et pénale','Réglementation ACM'],objectif:['transmettre'],objectifTexte:'Distinguer responsabilité civile et pénale et identifier ses obligations de surveillance',connaissances:['Définition responsabilité civile','Responsabilité pénale du fait d\'autrui','Obligations de surveillance','Déclaration d\'accident'],lancement:'Mise en situation : un accident survient pendant une activité. Que se passe-t-il ?',dev:'Jeu de rôle en sous-groupes : chaque groupe reçoit un scénario différent (chute, fugue, bagarre). Ils jouent la scène puis analysent les responsabilités engagées.',cloture:'Synthèse collective au paperboard. Le formateur clarifie les points de droit mal compris.',methode:['Jeu de rôle'],justif:'Le jeu de rôle permet de vivre la situation avant de l\'analyser. La charge émotionnelle rend le contenu mémorable.',vigilance:'La responsabilité pénale doit être exposée précisément — ne pas laisser le groupe avec une représentation approximative.',duree:90,stagiaires:20,formateurs:2,salle:['Grande salle modulable'],materiel:['Paperboard uniquement'],valide:true,createdAt:'2025-01-01'},
+  {id:'d2',titre:'Débat mouvant — liberté et autorité',auteur:'Équipe PACA',session:['SFG'],contenu:['Liberté, autorité, sanction','Positionnement de l\'animateur'],objectif:['posture'],objectifTexte:'Construire sa propre ligne de conduite sur l\'exercice de l\'autorité en ACM',connaissances:['Distinction liberté / licence','Rôle du règlement intérieur','Posture d\'adulte référent'],lancement:'Question provoc affichée : "Un animateur qui ne sanctionne jamais est un bon animateur." Les participants se positionnent dans la salle.',dev:'Débat mouvant sur 3 affirmations successives. Après chaque déplacement, 2-3 personnes expliquent leur choix.',cloture:'Le formateur nomme les tensions repérées et propose une synthèse sur la posture d\'adulte référent.',methode:['Débat mouvant'],justif:'Le débat mouvant exige de se positionner physiquement — cela oblige à sortir de l\'abstraction et à assumer un point de vue.',vigilance:'Ne pas laisser le groupe sur l\'idée que "tout se vaut". Clore sur des repères clairs.',duree:75,stagiaires:25,formateurs:1,salle:['Grande salle modulable'],materiel:['Minimal'],valide:true,createdAt:'2025-01-01'},
+  {id:'d3',titre:'Atelier VSS — repérer et signaler',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Violences sexistes et sexuelles'],objectif:['transmettre','competence'],objectifTexte:'Identifier les signes de détresse et appliquer la procédure de signalement',connaissances:['Définitions légales','Signes de détresse à repérer','Procédure de signalement','Posture professionnelle','Cadre de protection de l\'enfance'],lancement:'Vidéo courte (2 min) sur un témoignage fictif. Réaction à chaud du groupe.',dev:'Étude de cas en binômes : chaque binôme reçoit un scénario et doit identifier les signes, décider si signalement, et rédiger la démarche.',cloture:'Mise en commun. Le formateur apporte le cadre légal précis et la procédure CRIP.',methode:['Étude de cas'],justif:'Le cas concret ancre le contenu dans le réel. La VSS ne supporte pas les généralités.',vigilance:'Contenu sensible — prévoir un temps de décompression. Le cadre légal doit être exposé sans ambiguïté.',duree:120,stagiaires:16,formateurs:2,salle:['Plusieurs petites salles'],materiel:['Vidéoprojecteur + paperboard'],valide:true,createdAt:'2025-01-01'},
+  {id:'d4',titre:'Frises chronologiques — développement de l\'enfant',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Connaissance des publics'],objectif:['transmettre'],objectifTexte:'Identifier les grandes étapes du développement de 3 à 17 ans et adapter ses animations en conséquence',connaissances:['Stades de développement 3-17 ans','Besoins fondamentaux par tranche d\'âge','Rythmes biologiques','Développement socio-affectif'],lancement:'Photos d\'enfants de différents âges : "Qu\'est-ce que cet enfant est capable de faire ? Qu\'est-ce qui le préoccupe ?"',dev:'Par tranche d\'âge (3-6, 6-11, 11-14, 14-17), chaque groupe construit une frise avec les caractéristiques du public. Mise en commun en gallery walk.',cloture:'Le formateur complète les manques, corrige les approximations, et distribue une fiche de synthèse.',methode:['Travail en sous-groupes'],justif:'La construction active des frises mobilise les représentations existantes et permet au formateur d\'identifier les lacunes à combler.',vigilance:'Les représentations sur l\'adolescence sont souvent très stéréotypées. Prévoir un apport structuré sur ce point.',duree:90,stagiaires:20,formateurs:1,salle:['Grande salle modulable'],materiel:['Matériel complet'],valide:true,createdAt:'2025-01-01'},
+  {id:'d5',titre:'Quiz taux d\'encadrement',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Réglementation ACM'],objectif:['transmettre'],objectifTexte:'Mémoriser et appliquer les taux d\'encadrement réglementaires selon le type d\'accueil',connaissances:['Taux d\'encadrement obligatoires','Types d\'accueil et spécificités','Obligations déclaratives'],lancement:'Question ouverte : "Combien faut-il d\'animateurs pour 20 enfants de 6 ans ?" Recueil des réponses à main levée.',dev:'Quiz en équipes (Kahoot ou paperboard) : 10 situations différentes avec les taux à calculer. Les erreurs sont immédiatement expliquées.',cloture:'Récapitulatif visuel affiché. Chaque participant repart avec la fiche réglementaire.',methode:['Quiz / jeu pédagogique'],justif:'Les taux d\'encadrement sont des données précises et non négociables — le quiz crée la mémorisation par l\'enjeu et la répétition.',vigilance:'C\'est un contenu à transmission obligatoire : vérifier que tout le monde a la bonne réponse avant de clore.',duree:45,stagiaires:30,formateurs:1,salle:['Salle de classe standard'],materiel:['Vidéoprojecteur + paperboard'],valide:true,createdAt:'2025-01-01'}
+];
+
+let fstate={fsession:[],fcontenu:[],fobjectif:[],fmethode:[],fsalle:[],fmateriel:[]};
+let filters={session:[],objectif:[],contenu:[]};
+let editId=null;
+let fstepCurrent=0;
+
+function getDB(){
+  try{
+    const raw=localStorage.getItem('fiches_bafa');
+    if(!raw)return[...FICHES_DEFAUT];
+    const parsed=JSON.parse(raw);
+    return parsed.length?parsed:[...FICHES_DEFAUT];
+  }catch(e){return[...FICHES_DEFAUT]}
+}
+function saveDB(arr){try{localStorage.setItem('fiches_bafa',JSON.stringify(arr))}catch(e){}}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>{el.style.display='none'},2500)
+}
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='recherche')renderResultats();
+  if(id==='contribuer')renderContrib();
+}
+
+/* ─── RECHERCHE ─── */
+function toggleFilter(key,val,el){
+  el.classList.toggle('on');
+  if(el.classList.contains('on')){if(!filters[key].includes(val))filters[key].push(val)}
+  else{filters[key]=filters[key].filter(v=>v!==val)}
+  renderResultats();
+}
+
+function resetRecherche(){
+  filters={session:[],objectif:[],contenu:[]};
+  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  document.getElementById('r-duree').value=120;
+  document.getElementById('r-stag').value=15;
+  renderResultats();
+}
+
+function renderResultats(){
+  const duree=+document.getElementById('r-duree').value;
+  const stag=+document.getElementById('r-stag').value;
+  document.getElementById('rv-duree').textContent=duree+' min';
+  document.getElementById('rv-stag').textContent=stag;
+  const db=getDB().filter(f=>f.valide!==false);
+  const scored=db.map(f=>{
+    let score=0,max=0;
+    if(filters.session.length){max+=3;if(filters.session.some(s=>f.session.includes(s)))score+=3}
+    if(filters.contenu.length){max+=3;if(filters.contenu.some(c=>f.contenu.includes(c)))score+=3}
+    if(filters.objectif.length){max+=2;if(filters.objectif.some(o=>f.objectif.includes(o)))score+=2}
+    max+=2;if(f.duree<=duree)score+=2;
+    max+=1;if(f.stagiaires>=stag)score+=1;
+    const pct=max>0?Math.round(score/max*100):80;
+    return{...f,pct,max}
+  }).filter(f=>f.pct>=40||filters.session.length+filters.contenu.length+filters.objectif.length===0)
+    .sort((a,b)=>b.pct-a.pct);
+
+  const el=document.getElementById('resultats');
+  document.getElementById('resultat-count').textContent=scored.length+' fiche'+(scored.length>1?'s':'')+(filters.session.length+filters.contenu.length+filters.objectif.length>0?' correspondante'+(scored.length>1?'s':''):' disponible'+(scored.length>1?'s':''));
+
+  if(!scored.length){
+    el.innerHTML='<div class="empty"><i class="ti ti-search-off"></i>Aucune fiche ne correspond à ces critères.<br>Essayez d\'élargir vos filtres.</div>';
+    return;
+  }
+  el.innerHTML=scored.slice(0,6).map(f=>`
+    <div class="fiche-card">
+      <div class="fiche-card-head">
+        <div>
+          <div class="fiche-titre">${f.titre}</div>
+          <div class="fiche-meta" style="margin:4px 0 6px">${f.auteur||''} · ${f.duree} min · ${f.stagiaires} stagiaires max</div>
+          <div>${f.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${f.methode&&f.methode.length?f.methode.map(m=>`<span class="badge" style="background:#EEEDFE;color:#3C3489">${m}</span>`).join(''):''}</div>
+        </div>
+        <div class="score-pill">
+          <div class="score-num">${f.pct}%</div>
+          <div style="font-size:10px;color:var(--text-muted)">correspondance</div>
+          <div class="score-bar"><div class="score-fill" style="width:${f.pct}%"></div></div>
+        </div>
+      </div>
+      <div class="fiche-card-body">
+        ${f.objectifTexte?`<div class="fiche-row"><span class="k">Objectif</span><span class="v">${f.objectifTexte}</span></div>`:''}
+        ${f.connaissances&&f.connaissances.length?`<div class="fiche-row"><span class="k">Connaissances</span><span class="v">${f.connaissances.join(' · ')}</span></div>`:''}
+        ${(f.lancement||f.dev||f.cloture)?`
+        <div class="phase-block">
+          ${f.lancement?`<div class="phase-row"><div class="phase-lbl" style="color:var(--green-dark);border-left:3px solid var(--green)"><i class="ti ti-player-play" style="font-size:11px"></i> Lancement</div><div class="phase-txt">${f.lancement}</div></div>`:''}
+          ${f.dev?`<div class="phase-row"><div class="phase-lbl" style="color:var(--blue-dark);border-left:3px solid var(--blue)"><i class="ti ti-tools" style="font-size:11px"></i> Développement</div><div class="phase-txt">${f.dev}</div></div>`:''}
+          ${f.cloture?`<div class="phase-row"><div class="phase-lbl" style="color:var(--amber);border-left:3px solid var(--amber)"><i class="ti ti-check" style="font-size:11px"></i> Clôture</div><div class="phase-txt">${f.cloture}</div></div>`:''}
+        </div>`:''}
+        ${f.vigilance?`<div class="fiche-row"><span class="k" style="color:var(--red-dark)"><i class="ti ti-alert-triangle" style="font-size:12px"></i> Vigilance</span><span class="v">${f.vigilance}</span></div>`:''}
+        <div style="margin-top:.5rem">${f.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ─── CONTRIBUER ─── */
+function renderContrib(){
+  const db=getDB();
+  const valides=db.filter(f=>f.valide).length;
+  const contenus=[...new Set(db.flatMap(f=>f.contenu))].length;
+  document.getElementById('stats-contrib').innerHTML=`
+    <div class="stat-card"><div class="stat-n">${db.length}</div><div class="stat-l">Fiches saisies</div></div>
+    <div class="stat-card"><div class="stat-n">${valides}</div><div class="stat-l">Validées</div></div>
+    <div class="stat-card"><div class="stat-n">${contenus}</div><div class="stat-l">Contenus couverts</div></div>
+  `;
+  const el=document.getElementById('liste-contrib');
+  if(!db.length){el.innerHTML='<div class="empty"><i class="ti ti-file-plus"></i>Aucune fiche. Cliquez sur "Nouvelle fiche" pour commencer.</div>';return}
+  el.innerHTML=db.map(f=>`
+    <div class="fiche-item">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:600;margin-bottom:4px">${f.titre||'(sans titre)'}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:5px">${f.auteur||''} · ${f.duree} min · ${f.stagiaires} stagiaires</div>
+        <div>${f.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${f.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}<span class="badge ${f.valide?'valide':'attente'}">${f.valide?'Validée':'En attente'}</span></div>
+      </div>
+      <div class="fiche-item-actions">
+        <button class="btn sm" onclick="toggleValide('${f.id}')" title="${f.valide?'Retirer validation':'Valider'}"><i class="ti ti-${f.valide?'x':'check'}"></i></button>
+        <button class="btn sm danger" onclick="deleteFiche('${f.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showFormContrib(id=null){
+  editId=id;
+  fstate={fsession:[],fcontenu:[],fobjectif:[],fmethode:[],fsalle:[],fmateriel:[]};
+  buildCheckGridF('fcontenu-grid',CONTENUS,'fcontenu');
+  buildCheckGridF('fmethode-grid',METHODES,'fmethode');
+  buildConnF();
+  ['f-titre','f-auteur','f-objectif','f-lancement','f-dev','f-cloture','f-justif','f-vigilance'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});
+  document.getElementById('f-duree').value=90;
+  document.getElementById('f-stag').value=12;
+  document.getElementById('f-form').value=2;
+  fsv();
+  if(id){const f=getDB().find(x=>x.id===id);if(f)populateF(f)}
+  document.getElementById('form-titre-page').textContent=id?'Modifier la fiche':'Nouvelle fiche';
+  fstepCurrent=0;fss(0);
+  document.getElementById('vue-liste-contrib').style.display='none';
+  document.getElementById('vue-form-contrib').style.display='block';
+}
+
+function buildCheckGridF(id,items,key){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.innerHTML=items.map(item=>`<div class="check-item" onclick="tog(this,'${key}','${item.replace(/'/g,"\\'")}')"><input type="checkbox"> ${item}</div>`).join('');
+}
+
+function buildConnF(){
+  const el=document.getElementById('fconn-fields');
+  if(!el)return;
+  el.innerHTML=[1,2,3,4,5].map(i=>`<div class="field"><label>Connaissance ${i}</label><input type="text" id="fconn-${i}" placeholder="Savoir précis que le stagiaire devra avoir acquis"></div>`).join('');
+}
+
+function populateF(f){
+  document.getElementById('f-titre').value=f.titre||'';
+  document.getElementById('f-auteur').value=f.auteur||'';
+  document.getElementById('f-objectif').value=f.objectifTexte||'';
+  document.getElementById('f-lancement').value=f.lancement||'';
+  document.getElementById('f-dev').value=f.dev||'';
+  document.getElementById('f-cloture').value=f.cloture||'';
+  document.getElementById('f-justif').value=f.justif||'';
+  document.getElementById('f-vigilance').value=f.vigilance||'';
+  document.getElementById('f-duree').value=f.duree||90;
+  document.getElementById('f-stag').value=f.stagiaires||12;
+  document.getElementById('f-form').value=f.formateurs||2;
+  fsv();
+  fstate.fsession=f.session||[];fstate.fcontenu=f.contenu||[];
+  fstate.fobjectif=f.objectif||[];fstate.fmethode=f.methode||[];
+  fstate.fsalle=f.salle||[];fstate.fmateriel=f.materiel||[];
+  (f.connaissances||[]).forEach((c,i)=>{const e=document.getElementById('fconn-'+(i+1));if(e)e.value=c});
+  setTimeout(()=>{
+    document.querySelectorAll('.check-item').forEach(el=>{
+      const cb=el.querySelector('input');if(!cb)return;
+      const m=el.getAttribute('onclick').match(/'([^']+)','([^']+)'/);if(!m)return;
+      const k=m[1],v=m[2];
+      if(fstate[k]&&fstate[k].includes(v)){el.classList.add('on');cb.checked=true}
+    })
+  },50);
+}
+
+function tog(el,key,val){
+  const cb=el.querySelector('input');
+  const on=el.classList.toggle('on');
+  cb.checked=on;
+  if(!fstate[key])fstate[key]=[];
+  if(on){if(!fstate[key].includes(val))fstate[key].push(val)}
+  else{fstate[key]=fstate[key].filter(v=>v!==val)}
+}
+
+function fsv(){
+  document.getElementById('fsv-duree').textContent=document.getElementById('f-duree').value+' min';
+  document.getElementById('fsv-stag').textContent=document.getElementById('f-stag').value;
+  document.getElementById('fsv-form').textContent=document.getElementById('f-form').value;
+}
+
+function fs(n){fss(n)}
+function fss(n){
+  for(let i=0;i<5;i++){document.getElementById('fstep'+i).style.display=i===n?'block':'none'}
+  fstepCurrent=n;
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('fp'+i);
+    el.className='ps'+(i<n?' done':i===n?' active':'');
+  }
+}
+
+function retourListe(){
+  document.getElementById('vue-form-contrib').style.display='none';
+  document.getElementById('vue-liste-contrib').style.display='block';
+  renderContrib();
+}
+
+function saveFiche(){
+  const connaissances=[1,2,3,4,5].map(i=>document.getElementById('fconn-'+i)?.value?.trim()).filter(Boolean);
+  const fiche={
+    id:editId||Date.now().toString(),
+    titre:document.getElementById('f-titre').value.trim(),
+    auteur:document.getElementById('f-auteur').value.trim(),
+    session:fstate.fsession,contenu:fstate.fcontenu,
+    objectif:fstate.fobjectif,objectifTexte:document.getElementById('f-objectif').value.trim(),
+    connaissances,
+    lancement:document.getElementById('f-lancement').value.trim(),
+    dev:document.getElementById('f-dev').value.trim(),
+    cloture:document.getElementById('f-cloture').value.trim(),
+    methode:fstate.fmethode,justif:document.getElementById('f-justif').value.trim(),
+    duree:+document.getElementById('f-duree').value,
+    stagiaires:+document.getElementById('f-stag').value,
+    formateurs:+document.getElementById('f-form').value,
+    salle:fstate.fsalle,materiel:fstate.fmateriel,
+    vigilance:document.getElementById('f-vigilance').value.trim(),
+    valide:false,createdAt:new Date().toISOString()
+  };
+  const db=getDB();
+  if(editId){const idx=db.findIndex(f=>f.id===editId);if(idx>-1){fiche.valide=db[idx].valide;db[idx]=fiche}else db.push(fiche)}
+  else db.push(fiche);
+  saveDB(db);toast('Fiche enregistrée');retourListe();
+}
+
+function toggleValide(id){
+  const db=getDB();const f=db.find(x=>x.id===id);
+  if(f){f.valide=!f.valide;saveDB(db);renderContrib()}
+}
+function deleteFiche(id){saveDB(getDB().filter(f=>f.id!==id));renderContrib()}
+
+function exportJSON(){
+  const db=getDB();
+  if(!db.length){toast('Aucune fiche à exporter');return}
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='fiches_bafa_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+
+renderResultats();
+</script>
+</body>
+</html>
