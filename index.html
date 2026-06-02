@@ -8,224 +8,397 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:#1D9E75;--green-dark:#0F6E56;--green-darker:#085041;
-  --green-light:#E1F5EE;--green-mid:#9FE1CB;
-  --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
-  --amber:#BA7517;--amber-light:#FAEEDA;
-  --gray:#888780;--gray-light:#F1EFE8;--gray-dark:#444441;
-  --red:#E24B4A;--red-light:#FCEBEB;--red-dark:#A32D2D;
+  --orange:#FFAE62;--orange-dark:#E8903A;--orange-darker:#C4721E;
+  --orange-light:#FFF3E6;--orange-mid:#FFD4A8;
+  --red:#FF585D;--red-dark:#D93E43;--red-light:#FFEAEA;
   --text:#1a1a1a;--text-muted:#666;--text-hint:#999;
   --bg:#fff;--bg-surface:#f7f7f5;--bg-hover:#f0f0ec;
-  --border:#e0e0da;--border-mid:#ccc;--radius:8px;--radius-lg:12px
+  --border:#e0e0da;--border-mid:#ccc;--radius:8px;--radius-lg:12px;
+  --shadow:0 2px 8px rgba(255,174,98,.15);--shadow-hover:0 4px 16px rgba(255,174,98,.25)
 }
 body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg-surface);color:var(--text);min-height:100vh;font-size:14px}
 
 /* NAV */
-.nav-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100}
-.nav-logo{font-size:15px;font-weight:600;color:var(--green-dark);padding:1rem 1rem 1rem 0;margin-right:1rem;border-right:1px solid var(--border);white-space:nowrap}
+.nav-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;position:sticky;top:0;z-index:100}
+.nav-logo{font-size:15px;font-weight:700;color:var(--orange-darker);padding:1rem 1rem 1rem 0;margin-right:1rem;border-right:1px solid var(--border);white-space:nowrap;cursor:pointer;transition:color .2s}
+.nav-logo:hover{color:var(--orange-dark)}
 .nav-logo span{color:var(--text-muted);font-weight:400}
-.nav-tab{padding:.875rem 1.25rem;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text-muted);transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.nav-tab{padding:.875rem 1.25rem;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text-muted);transition:all .2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
 .nav-tab:hover{color:var(--text)}
-.nav-tab.active{color:var(--green-dark);border-bottom-color:var(--green);font-weight:500}
+.nav-tab.active{color:var(--orange-darker);border-bottom-color:var(--orange);font-weight:500}
 
-/* LAYOUT */
+/* PAGES */
 .page{display:none;padding:1.5rem;max-width:860px;margin:0 auto}
 .page.active{display:block}
 
-/* CARDS */
-.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem}
-.card-title{font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--text)}
+/* ANIMATIONS TRANSITIONS */
+.view{display:none;opacity:0;transform:translateX(18px);transition:opacity .28s ease,transform .28s ease}
+.view.active{display:block;opacity:1;transform:translateX(0)}
+.view.exit{opacity:0;transform:translateX(-18px)}
 
-/* FORM ELEMENTS */
+/* ACCUEIL */
+.accueil-hero{text-align:center;padding:3rem 1rem 2rem}
+.accueil-hero h1{font-size:24px;font-weight:700;margin-bottom:.5rem;color:var(--text)}
+.accueil-hero p{font-size:14px;color:var(--text-muted);max-width:480px;margin:0 auto 2rem;line-height:1.6}
+.accueil-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:600px;margin:0 auto}
+.accueil-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);text-align:left;box-shadow:none}
+.accueil-card:hover{border-color:var(--orange);box-shadow:var(--shadow-hover);transform:translateY(-3px)}
+.accueil-card:active{transform:translateY(0) scale(.98)}
+.accueil-card.primary{border-color:var(--orange);background:var(--orange-light)}
+.accueil-card-icon{font-size:28px;color:var(--orange);margin-bottom:.75rem;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.accueil-card:hover .accueil-card-icon{transform:scale(1.15)}
+.accueil-card-title{font-size:15px;font-weight:600;margin-bottom:.4rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accueil-card-desc{font-size:12px;color:var(--text-muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.accueil-stats{display:flex;gap:2rem;justify-content:center;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+.accueil-stat .n{font-size:22px;font-weight:700;color:var(--orange)}
+.accueil-stat .l{font-size:11px;color:var(--text-muted);margin-top:2px;text-align:center}
+
+/* CHEMIN */
+.chemin-header{margin-bottom:1.75rem}
+.chemin-back{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:13px;display:inline-flex;align-items:center;gap:5px;padding:0;transition:color .15s;margin-bottom:.6rem}
+.chemin-back:hover{color:var(--orange-darker)}
+.chemin-breadcrumb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:.6rem}
+.crumb{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.crumb.active{color:var(--text);font-weight:500}
+.crumb-sep{font-size:12px;color:var(--border-mid);flex-shrink:0}
+.chemin-progress{display:flex;gap:4px}
+.cp{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background .35s ease,width .35s ease}
+.cp.done{background:var(--orange)}
+.cp.active{background:var(--orange-darker)}
+
+/* CHOICE CARDS */
+.choice-title{font-size:18px;font-weight:600;margin-bottom:.4rem;color:var(--text)}
+.choice-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.5}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.choice-grid.cols3{grid-template-columns:repeat(3,1fr)}
+.choice-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);overflow:hidden}
+.choice-card:hover{border-color:var(--orange);background:var(--orange-light);box-shadow:var(--shadow);transform:translateY(-2px)}
+.choice-card:active{transform:scale(.97)}
+.choice-card.selected{border:2px solid var(--orange);background:var(--orange-light);box-shadow:var(--shadow)}
+.choice-card-icon{font-size:22px;color:var(--orange);margin-bottom:.6rem;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.choice-card:hover .choice-card-icon{transform:scale(1.12)}
+.choice-card-title{font-size:14px;font-weight:600;margin-bottom:.3rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.choice-card-desc{font-size:12px;color:var(--text-muted);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* CHIPS */
+.chip-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-size:13px;cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.chip:hover{border-color:var(--orange);color:var(--orange-darker);transform:translateY(-1px)}
+.chip:active{transform:scale(.96)}
+.chip.on{background:var(--orange-light);border-color:var(--orange);color:var(--orange-darker);font-weight:500;transform:translateY(0)}
+
+/* OBJECTIFS */
+.objectif-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.objectif-item{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;transition:all .2s ease;font-size:13px;line-height:1.5;overflow:hidden;word-break:break-word}
+.objectif-item:hover{border-color:var(--orange);background:var(--orange-light);transform:translateX(3px)}
+.objectif-item:active{transform:scale(.98)}
+.objectif-item.selected{background:var(--orange-light);border-color:var(--orange);color:var(--orange-darker);font-weight:500}
+.objectif-empty{background:var(--orange-light);border:1px solid var(--orange-mid);border-radius:var(--radius);padding:1rem 1.25rem;font-size:13px;color:var(--orange-darker);line-height:1.6;margin-bottom:1.5rem}
+
+/* CONNAISSANCES */
+.conn-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem}
+.conn-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;padding:8px 12px;border-radius:var(--radius);border:1.5px solid var(--border);cursor:pointer;background:var(--bg);transition:all .2s ease;color:var(--text);word-break:break-word}
+.conn-item:hover{border-color:var(--orange);background:var(--orange-light)}
+.conn-item:active{transform:scale(.98)}
+.conn-item.on{background:var(--orange-light);border-color:var(--orange);color:var(--orange-darker)}
+.conn-item input{margin-top:2px;flex-shrink:0;accent-color:var(--orange);pointer-events:none}
+
+/* RÉSULTATS */
+.fiche-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem;opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease,box-shadow .2s ease}
+.fiche-card.visible{opacity:1;transform:translateY(0)}
+.fiche-card:hover{box-shadow:var(--shadow)}
+.fiche-card-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.fiche-card-body{padding:1rem 1.25rem}
+.fiche-card-actions{padding:.75rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg-surface)}
+.fiche-titre{font-size:14px;font-weight:600;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fiche-meta{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.score-pill{text-align:right;flex-shrink:0;position:relative;cursor:help}
+.score-num{font-size:20px;font-weight:700;color:var(--orange-darker)}
+.score-bar{width:56px;height:3px;background:var(--border);border-radius:2px;margin:4px 0 0 auto}
+.score-fill{height:100%;background:var(--orange);border-radius:2px;transition:width .5s ease}
+.score-tooltip{display:none;position:absolute;right:0;top:100%;margin-top:6px;background:var(--text);color:#fff;font-size:11px;padding:8px 12px;border-radius:var(--radius);white-space:nowrap;z-index:10;line-height:1.8;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.score-pill:hover .score-tooltip{display:block}
+.score-item{display:flex;align-items:center;gap:6px}
+.score-item .ok{color:#9FE1CB}.score-item .ko{color:#F09595}
+.fiche-row{display:flex;gap:8px;margin-bottom:6px;font-size:12px;overflow:hidden}
+.fiche-row .k{color:var(--text-muted);min-width:120px;max-width:120px;flex-shrink:0}
+.fiche-row .v{color:var(--text);flex:1;overflow:hidden;word-break:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.phase-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.75rem}
+.phase-row{display:grid;grid-template-columns:90px 1fr;overflow:hidden}
+.phase-lbl{padding:10px 12px;font-size:12px;font-weight:600;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;align-items:flex-start;gap:5px;white-space:nowrap}
+.phase-txt{padding:10px 12px;font-size:12px;color:var(--text);line-height:1.5;overflow:hidden;word-break:break-word}
+.phase-row+.phase-row .phase-lbl,.phase-row+.phase-row .phase-txt{border-top:1px solid var(--border)}
+
+/* BADGES */
+.badge{font-size:11px;padding:2px 8px;border-radius:10px;display:inline-block;margin:2px;white-space:nowrap;overflow:hidden;max-width:160px;text-overflow:ellipsis;vertical-align:middle}
+.badge.sfg{background:var(--orange-light);color:var(--orange-darker)}
+.badge.sa{background:#EEEDFE;color:#3C3489}
+.badge.valide{background:#EAF3DE;color:#27500A}
+.badge.attente{background:#FAEEDA;color:#633806}
+.badge.content{background:var(--bg-surface);color:var(--text-muted);border:1px solid var(--border)}
+
+/* FORM */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:14px;font-weight:600;margin-bottom:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .field{margin-bottom:.875rem}
 .field label{font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;font-weight:500}
-.field input,.field textarea,.field select{width:100%;font-size:13px;padding:8px 10px;border-radius:var(--radius);border:1px solid var(--border-mid);background:var(--bg);color:var(--text);outline:none;transition:border .15s}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--green)}
+.field input,.field textarea,.field select{width:100%;font-size:13px;padding:8px 10px;border-radius:var(--radius);border:1.5px solid var(--border-mid);background:var(--bg);color:var(--text);outline:none;transition:border .2s,box-shadow .2s}
+.field input:focus,.field textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,174,98,.15)}
 .field textarea{resize:vertical;min-height:72px;line-height:1.5}
-
-/* CHECKBOXES */
+.field-hint{font-size:11px;color:var(--text-hint);margin-top:4px;font-style:italic}
 .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .check-grid.cols1{grid-template-columns:1fr}
-.check-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;padding:8px 10px;border-radius:var(--radius);border:1px solid var(--border);cursor:pointer;background:var(--bg);transition:all .15s;color:var(--text);user-select:none}
-.check-item:hover{border-color:var(--green)}
-.check-item.on{background:var(--green-light);border-color:var(--green);color:var(--green-darker)}
-.check-item input{margin-top:2px;flex-shrink:0;accent-color:var(--green);pointer-events:none}
-
-/* SLIDERS */
+.check-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;padding:8px 10px;border-radius:var(--radius);border:1.5px solid var(--border);cursor:pointer;background:var(--bg);transition:all .2s ease;color:var(--text);user-select:none;word-break:break-word}
+.check-item:hover{border-color:var(--orange)}
+.check-item:active{transform:scale(.98)}
+.check-item.on{background:var(--orange-light);border-color:var(--orange);color:var(--orange-darker)}
+.check-item input{margin-top:2px;flex-shrink:0;accent-color:var(--orange);pointer-events:none}
 .slider-row{display:flex;align-items:center;gap:12px;margin-bottom:.75rem}
-.slider-row label{font-size:13px;color:var(--text-muted);min-width:110px}
-.slider-row input[type=range]{flex:1;accent-color:var(--green)}
-.slider-val{font-size:13px;font-weight:600;min-width:44px;text-align:right;color:var(--green-dark)}
+.slider-row label{font-size:13px;color:var(--text-muted);min-width:110px;white-space:nowrap}
+.slider-row input[type=range]{flex:1;accent-color:var(--orange)}
+.slider-val{font-size:13px;font-weight:600;min-width:44px;text-align:right;color:var(--orange-darker)}
+.phase-form{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.75rem}
+.phase-form-row{display:grid;grid-template-columns:90px 1fr}
+.phase-form-lbl{padding:10px 12px;font-size:12px;font-weight:600;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.phase-form-lbl.l{color:var(--orange-darker)}.phase-form-lbl.d{color:#0C447C}.phase-form-lbl.c{color:var(--red-dark)}
+.phase-form-row+.phase-form-row .phase-form-lbl,.phase-form-row+.phase-form-row textarea{border-top:1px solid var(--border)}
+.phase-form-row textarea{border:none;border-radius:0;background:var(--bg);width:100%;resize:none;min-height:64px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;font-family:inherit}
+.progress{display:flex;gap:4px;margin-bottom:1.5rem}
+.ps{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background .35s ease}
+.ps.done{background:var(--orange)}.ps.active{background:var(--orange-darker)}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;text-align:center;transition:box-shadow .2s}
+.stat-card:hover{box-shadow:var(--shadow)}
+.stat-n{font-size:26px;font-weight:700;color:var(--orange)}
+.stat-l{font-size:11px;color:var(--text-muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fiche-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:box-shadow .2s}
+.fiche-item:hover{box-shadow:var(--shadow)}
+.fiche-item-left{flex:1;min-width:0;overflow:hidden}
+.fiche-item-actions{display:flex;gap:6px;flex-shrink:0}
+.fiche-item-title{font-size:14px;font-weight:600;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fiche-item-meta{font-size:12px;color:var(--text-muted);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* BUTTONS */
-.btn{padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border-mid);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:var(--bg-hover)}
-.btn.primary{background:var(--green);border-color:var(--green);color:#fff;font-weight:500}
-.btn.primary:hover{background:var(--green-dark)}
+.btn{padding:8px 16px;border-radius:var(--radius);border:1.5px solid var(--border-mid);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);transition:all .2s cubic-bezier(.34,1.56,.64,1);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{background:var(--bg-hover);transform:translateY(-1px)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:500}
+.btn.primary:hover{background:var(--orange-dark);box-shadow:var(--shadow)}
 .btn.sm{padding:5px 12px;font-size:12px}
 .btn.danger{border-color:var(--red);color:var(--red-dark)}
 .btn.danger:hover{background:var(--red-light)}
 .btn.ghost{border-color:transparent}
 .btn.ghost:hover{background:var(--bg-hover);border-color:var(--border)}
-
-/* PROGRESS */
-.progress{display:flex;gap:4px;margin-bottom:1.5rem}
-.ps{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background .3s}
-.ps.done{background:var(--green)}.ps.active{background:var(--green-dark)}
-
-/* BADGES */
-.badge{font-size:11px;padding:2px 8px;border-radius:10px;display:inline-block;margin:2px}
-.badge.sfg{background:var(--green-light);color:var(--green-darker)}
-.badge.sa{background:#EEEDFE;color:#3C3489}
-.badge.valide{background:#EAF3DE;color:#27500A}
-.badge.attente{background:var(--amber-light);color:#633806}
-.badge.content{background:var(--bg-surface);color:var(--text-muted);border:1px solid var(--border)}
-
-/* FICHE CARDS */
-.fiche-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem}
-.fiche-card-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.fiche-card-body{padding:1rem 1.25rem}
-.fiche-titre{font-size:14px;font-weight:600;margin-bottom:4px}
-.fiche-meta{font-size:12px;color:var(--text-muted)}
-.score-pill{text-align:right;flex-shrink:0}
-.score-num{font-size:20px;font-weight:700;color:var(--green-dark)}
-.score-bar{width:56px;height:3px;background:var(--border);border-radius:2px;margin:4px 0 0 auto}
-.score-fill{height:100%;background:var(--green);border-radius:2px}
-.fiche-row{display:flex;gap:8px;margin-bottom:6px;font-size:12px}
-.fiche-row .k{color:var(--text-muted);min-width:130px;flex-shrink:0}
-.fiche-row .v{color:var(--text);flex:1}
-.phase-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.75rem}
-.phase-row{display:grid;grid-template-columns:90px 1fr}
-.phase-lbl{padding:10px 12px;font-size:12px;font-weight:600;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;align-items:flex-start;gap:5px}
-.phase-txt{padding:10px 12px;font-size:12px;color:var(--text);line-height:1.5}
-.phase-row+.phase-row .phase-lbl,.phase-row+.phase-row .phase-txt{border-top:1px solid var(--border)}
-
-/* LISTE CONTRIBUTEUR */
-.fiche-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.fiche-item-actions{display:flex;gap:6px;flex-shrink:0}
-
-/* STATS */
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
-.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;text-align:center}
-.stat-n{font-size:26px;font-weight:700;color:var(--green)}
-.stat-l{font-size:11px;color:var(--text-muted);margin-top:2px}
-
-/* RECHERCHE CHIPS */
-.chip-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
-.chip{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;transition:all .15s;color:var(--text)}
-.chip:hover{border-color:var(--green);color:var(--green-dark)}
-.chip.on{background:var(--green-light);border-color:var(--green);color:var(--green-darker);font-weight:500}
-
-/* STEP NAV */
+.btn.outline-orange{border-color:var(--orange);color:var(--orange-darker)}
+.btn.outline-orange:hover{background:var(--orange-light)}
 .step-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem}
 .step-nav-right{display:flex;gap:8px}
 
-/* EMPTY */
 .empty{text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px}
 .empty i{font-size:32px;display:block;margin-bottom:12px;opacity:.3}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--orange-darker);color:#fff;font-size:13px;padding:10px 20px;border-radius:var(--radius-lg);display:none;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateX(-50%) translateY(12px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
 
-/* TOAST */
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--green-dark);color:#fff;font-size:13px;padding:10px 20px;border-radius:var(--radius-lg);display:none;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.confirm-screen{text-align:center;padding:2.5rem 1rem}
+.confirm-icon{font-size:48px;color:var(--orange);margin-bottom:1rem;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-title{font-size:20px;font-weight:600;margin-bottom:.5rem}
+.confirm-sub{font-size:13px;color:var(--text-muted);margin-bottom:2rem}
+.confirm-summary{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:left;max-width:480px;margin:0 auto 2rem;overflow:hidden}
 
-/* RECHERCHE */
-.search-filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
-.filter-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem}
-.filter-block.full{grid-column:span 2}
-.filter-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
-
-/* PHASE FORM */
-.phase-form{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:.75rem}
-.phase-form-row{display:grid;grid-template-columns:90px 1fr}
-.phase-form-lbl{padding:10px 12px;font-size:12px;font-weight:600;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;align-items:center;gap:5px}
-.phase-form-lbl.l{color:var(--green-dark)}.phase-form-lbl.d{color:var(--blue-dark)}.phase-form-lbl.c{color:var(--amber)}
-.phase-form-row+.phase-form-row .phase-form-lbl,.phase-form-row+.phase-form-row textarea{border-top:1px solid var(--border)}
-.phase-form-row textarea{border:none;border-radius:0;background:var(--bg);width:100%;resize:none;min-height:64px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;font-family:inherit}
-
-/* MOBILE */
 @media(max-width:600px){
-  .search-filters{grid-template-columns:1fr}
-  .filter-block.full{grid-column:span 1}
+  .choice-grid,.choice-grid.cols3,.accueil-cards{grid-template-columns:1fr}
   .check-grid{grid-template-columns:1fr}
   .stat-row{grid-template-columns:1fr 1fr}
+  .accueil-stats{gap:1rem}
+  .phase-row{grid-template-columns:70px 1fr}
+  .phase-form-row{grid-template-columns:70px 1fr}
 }
 </style>
 </head>
 <body>
-
 <nav class="nav-bar">
-  <div class="nav-logo">Séances BAFA/BAFD <span>PACA</span></div>
-  <button class="nav-tab active" onclick="showPage('recherche',this)"><i class="ti ti-search" style="font-size:14px"></i> Trouver une fiche</button>
-  <button class="nav-tab" onclick="showPage('contribuer',this)"><i class="ti ti-plus" style="font-size:14px"></i> Saisir une fiche</button>
+  <div class="nav-logo" onclick="goAccueil()">Séances BAFA/BAFD <span>PACA</span></div>
+  <button class="nav-tab" id="tab-recherche" onclick="showPage('recherche')"><i class="ti ti-search" style="font-size:14px"></i> Trouver une fiche</button>
+  <button class="nav-tab" id="tab-contribuer" onclick="showPage('contribuer')"><i class="ti ti-plus" style="font-size:14px"></i> Saisir une fiche</button>
 </nav>
-
 <div id="toast" class="toast"></div>
 
-<!-- ═══════════════════════════════════════════════ PAGE RECHERCHE -->
-<div class="page active" id="page-recherche">
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
-    <div>
-      <div style="font-size:18px;font-weight:600">Trouver une fiche séance</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Filtrez par vos contraintes, l'outil propose les fiches les plus adaptées</div>
+<!-- ACCUEIL -->
+<div class="page active" id="page-accueil">
+  <div class="accueil-hero">
+    <h1>Bibliothèque de séances BAFA/BAFD</h1>
+    <p>Trouvez une fiche séance adaptée à vos contraintes, ou contribuez en saisissant une séance que vous avez animée.</p>
+    <div class="accueil-cards">
+      <div class="accueil-card primary" onclick="showPage('recherche')">
+        <div class="accueil-card-icon"><i class="ti ti-search"></i></div>
+        <div class="accueil-card-title">Trouver une fiche</div>
+        <div class="accueil-card-desc">Filtrez par formation, thématique, contenu et objectif.</div>
+      </div>
+      <div class="accueil-card" onclick="showPage('contribuer')">
+        <div class="accueil-card-icon"><i class="ti ti-edit"></i></div>
+        <div class="accueil-card-title">Saisir une fiche</div>
+        <div class="accueil-card-desc">Formalisez une séance que vous avez animée pour l'ajouter à la bibliothèque.</div>
+      </div>
     </div>
-    <button class="btn sm" onclick="resetRecherche()"><i class="ti ti-refresh" style="font-size:13px"></i> Réinitialiser</button>
+    <div class="accueil-stats" id="accueil-stats"></div>
   </div>
-
-  <div class="search-filters">
-    <div class="filter-block">
-      <div class="filter-label">Type de session</div>
-      <div class="chip-grid">
-        <div class="chip" onclick="toggleFilter('session','SFG',this)">Formation générale</div>
-        <div class="chip" onclick="toggleFilter('session','SA',this)">Approfondissement</div>
-      </div>
-    </div>
-    <div class="filter-block">
-      <div class="filter-label">Objectif</div>
-      <div class="chip-grid" style="flex-direction:column">
-        <div class="chip" onclick="toggleFilter('objectif','transmettre',this)">Transmettre une connaissance</div>
-        <div class="chip" onclick="toggleFilter('objectif','posture',this)">Construire une posture</div>
-        <div class="chip" onclick="toggleFilter('objectif','competence',this)">Développer une compétence</div>
-      </div>
-    </div>
-    <div class="filter-block full">
-      <div class="filter-label">Contenu traité</div>
-      <div class="chip-grid">
-        <div class="chip" onclick="toggleFilter('contenu','Liberté, autorité, sanction',this)">Liberté, autorité, sanction</div>
-        <div class="chip" onclick="toggleFilter('contenu','Responsabilité civile et pénale',this)">Responsabilité civile et pénale</div>
-        <div class="chip" onclick="toggleFilter('contenu','Laïcité',this)">Laïcité</div>
-        <div class="chip" onclick="toggleFilter('contenu','Violences sexistes et sexuelles',this)">Violences sexistes et sexuelles</div>
-        <div class="chip" onclick="toggleFilter('contenu','Connaissance des publics',this)">Connaissance des publics</div>
-        <div class="chip" onclick="toggleFilter('contenu','Réglementation ACM',this)">Réglementation ACM</div>
-        <div class="chip" onclick="toggleFilter('contenu','Construction d\'une grande animation',this)">Grande animation</div>
-        <div class="chip" onclick="toggleFilter('contenu','Positionnement de l\'animateur',this)">Positionnement de l'animateur</div>
-        <div class="chip" onclick="toggleFilter('contenu','Gestion sanitaire',this)">Gestion sanitaire</div>
-      </div>
-    </div>
-    <div class="filter-block">
-      <div class="filter-label">Durée disponible</div>
-      <div class="slider-row" style="margin-bottom:0">
-        <input type="range" min="30" max="240" step="15" value="120" id="r-duree" oninput="renderResultats()" style="flex:1;accent-color:var(--green)">
-        <span class="slider-val" id="rv-duree">120 min</span>
-      </div>
-    </div>
-    <div class="filter-block">
-      <div class="filter-label">Taille du groupe</div>
-      <div class="slider-row" style="margin-bottom:0">
-        <input type="range" min="5" max="30" step="1" value="15" id="r-stag" oninput="renderResultats()" style="flex:1;accent-color:var(--green)">
-        <span class="slider-val" id="rv-stag">15</span>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-    <div style="font-size:13px;font-weight:500" id="resultat-count"></div>
-  </div>
-  <div id="resultats"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ PAGE CONTRIBUER -->
-<div class="page" id="page-contribuer">
+<!-- RECHERCHE -->
+<div class="page" id="page-recherche">
 
+  <div class="view active" id="r-step1">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="goAccueil()"><i class="ti ti-arrow-left" style="font-size:13px"></i> Accueil</button>
+      <div class="chemin-progress"><div class="cp active"></div><div class="cp"></div><div class="cp"></div><div class="cp"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quelle formation préparez-vous ?</div>
+    <div class="choice-sub">Le type de formation détermine les contenus et objectifs disponibles.</div>
+    <div class="choice-grid">
+      <div class="choice-card" onclick="choisirFormation('SFG')">
+        <div class="choice-card-icon"><i class="ti ti-school"></i></div>
+        <div class="choice-card-title">Formation générale BAFA</div>
+        <div class="choice-card-desc">Session de base — fondamentaux de l'animation.</div>
+      </div>
+      <div class="choice-card" onclick="choisirFormation('SA')">
+        <div class="choice-card-icon"><i class="ti ti-certificate"></i></div>
+        <div class="choice-card-title">Approfondissement / Qualification</div>
+        <div class="choice-card-desc">Session spécialisée autour d'une thématique.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SA : Thématique -->
+  <div class="view" id="r-step-thematique">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step1')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Type de formation</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Approfondissement</span><span class="crumb-sep">›</span><span class="crumb active">Thématique</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp active"></div><div class="cp"></div><div class="cp"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quelle thématique d'approfondissement ?</div>
+    <div class="choice-sub">La thématique filtre les fiches disponibles.</div>
+    <div class="choice-grid cols3" id="thematiques-grid"></div>
+    <button class="btn" onclick="showView('r-step1')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+  </div>
+
+  <!-- SFG : Contenu -->
+  <div class="view" id="r-step-contenu-sfg">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step1')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Type de formation</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Formation générale</span><span class="crumb-sep">›</span><span class="crumb active">Contenu</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp active"></div><div class="cp"></div><div class="cp"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quel contenu souhaitez-vous traiter ?</div>
+    <div class="choice-sub">Sélectionnez un ou plusieurs contenus.</div>
+    <div class="chip-grid" id="contenu-chips-sfg"></div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn" onclick="showView('r-step1')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+      <button class="btn primary" onclick="showView('r-step-objectif-sfg')">Choisir l'objectif</button>
+    </div>
+  </div>
+
+  <!-- SA : Contenu -->
+  <div class="view" id="r-step-contenu-sa">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step-thematique')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Thématique</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Approfondissement</span><span class="crumb-sep">›</span><span class="crumb" id="crumb-th1"></span><span class="crumb-sep">›</span><span class="crumb active">Contenu</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp done"></div><div class="cp active"></div><div class="cp"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quel contenu souhaitez-vous traiter ?</div>
+    <div class="choice-sub">Sélectionnez un ou plusieurs contenus.</div>
+    <div class="chip-grid" id="contenu-chips-sa"></div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn" onclick="showView('r-step-thematique')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+      <button class="btn primary" onclick="showView('r-step-objectif-sa')">Choisir l'objectif</button>
+    </div>
+  </div>
+
+  <!-- SFG : Objectif -->
+  <div class="view" id="r-step-objectif-sfg">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step-contenu-sfg')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Contenu</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Formation générale</span><span class="crumb-sep">›</span><span class="crumb">Contenu</span><span class="crumb-sep">›</span><span class="crumb active">Objectif</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp done"></div><div class="cp active"></div><div class="cp"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quel est l'objectif de votre séance ?</div>
+    <div class="choice-sub">Les objectifs s'alimenteront après le week-end de rencontre.</div>
+    <div class="objectif-empty" id="objectif-empty-sfg"><i class="ti ti-clock-hour-4" style="margin-right:6px"></i>Les objectifs pour la formation générale seront définis lors du week-end de rencontre. Passez directement aux connaissances.</div>
+    <div class="objectif-list" id="objectifs-sfg"></div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn" onclick="showView('r-step-contenu-sfg')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+      <button class="btn primary" onclick="goConnaissances('SFG')">Choisir les connaissances</button>
+    </div>
+  </div>
+
+  <!-- SA : Objectif -->
+  <div class="view" id="r-step-objectif-sa">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step-contenu-sa')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Contenu</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Approfondissement</span><span class="crumb-sep">›</span><span class="crumb" id="crumb-th2"></span><span class="crumb-sep">›</span><span class="crumb">Contenu</span><span class="crumb-sep">›</span><span class="crumb active">Objectif</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp done"></div><div class="cp done"></div><div class="cp active"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quel est l'objectif de votre séance ?</div>
+    <div class="choice-sub">Les objectifs s'alimenteront après le week-end de rencontre.</div>
+    <div class="objectif-empty" id="objectif-empty-sa"><i class="ti ti-clock-hour-4" style="margin-right:6px"></i>Les objectifs pour cette thématique seront définis lors du week-end de rencontre. Passez directement aux connaissances.</div>
+    <div class="objectif-list" id="objectifs-sa"></div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn" onclick="showView('r-step-contenu-sa')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+      <button class="btn primary" onclick="goConnaissances('SA')">Choisir les connaissances</button>
+    </div>
+  </div>
+
+  <!-- Connaissances SFG -->
+  <div class="view" id="r-step-conn-sfg">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step-objectif-sfg')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Objectif</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Formation générale</span><span class="crumb-sep">›</span><span class="crumb">Contenu</span><span class="crumb-sep">›</span><span class="crumb active">Connaissances</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp done"></div><div class="cp done"></div><div class="cp active"></div><div class="cp"></div></div>
+    </div>
+    <div class="choice-title">Quelles connaissances minimum ?</div>
+    <div class="choice-sub">Sélectionnez les savoirs que vos stagiaires doivent avoir acquis en sortie.</div>
+    <div class="conn-list" id="conn-list-sfg"></div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn" onclick="showView('r-step-objectif-sfg')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+      <button class="btn primary" onclick="lancerRecherche('SFG')"><i class="ti ti-search" style="font-size:13px"></i> Voir les fiches</button>
+    </div>
+  </div>
+
+  <!-- Connaissances SA -->
+  <div class="view" id="r-step-conn-sa">
+    <div class="chemin-header">
+      <button class="chemin-back" onclick="showView('r-step-objectif-sa')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Objectif</button>
+      <div class="chemin-breadcrumb"><span class="crumb">Approfondissement</span><span class="crumb-sep">›</span><span class="crumb" id="crumb-th3"></span><span class="crumb-sep">›</span><span class="crumb active">Connaissances</span></div>
+      <div class="chemin-progress"><div class="cp done"></div><div class="cp done"></div><div class="cp done"></div><div class="cp done"></div><div class="cp active"></div></div>
+    </div>
+    <div class="choice-title">Quelles connaissances minimum ?</div>
+    <div class="choice-sub">Sélectionnez les savoirs que vos stagiaires doivent avoir acquis en sortie.</div>
+    <div class="conn-list" id="conn-list-sa"></div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn" onclick="showView('r-step-objectif-sa')"><i class="ti ti-arrow-left" style="font-size:13px"></i> Retour</button>
+      <button class="btn primary" onclick="lancerRecherche('SA')"><i class="ti ti-search" style="font-size:13px"></i> Voir les fiches</button>
+    </div>
+  </div>
+
+  <!-- Résultats -->
+  <div class="view" id="r-resultats">
+    <div class="chemin-header">
+      <button class="chemin-back" id="resultats-back-btn"><i class="ti ti-arrow-left" style="font-size:13px"></i> Modifier</button>
+      <div class="chemin-breadcrumb" id="resultats-breadcrumb"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+      <div style="font-size:15px;font-weight:600">Fiches correspondantes</div>
+      <div style="font-size:13px;color:var(--text-muted)" id="resultats-count"></div>
+    </div>
+    <div id="resultats-list"></div>
+    <div style="margin-top:1rem;text-align:center">
+      <button class="btn" onclick="resetRecherche()"><i class="ti ti-refresh" style="font-size:13px"></i> Nouvelle recherche</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRIBUER -->
+<div class="page" id="page-contribuer">
   <div id="vue-liste-contrib">
     <div class="stat-row" id="stats-contrib"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
@@ -237,79 +410,61 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg-surface
     </div>
     <div id="liste-contrib"></div>
   </div>
-
   <div id="vue-form-contrib" style="display:none">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
       <button class="btn ghost sm" onclick="retourListe()"><i class="ti ti-arrow-left" style="font-size:14px"></i></button>
-      <div style="font-size:16px;font-weight:600" id="form-titre-page">Nouvelle fiche</div>
+      <div style="font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="form-titre-page">Nouvelle fiche</div>
     </div>
-    <div class="progress" id="form-prog">
-      <div class="ps active" id="fp0"></div><div class="ps" id="fp1"></div>
-      <div class="ps" id="fp2"></div><div class="ps" id="fp3"></div><div class="ps" id="fp4"></div>
-    </div>
-
-    <!-- STEP 0 -->
+    <div class="progress"><div class="ps active" id="fp0"></div><div class="ps" id="fp1"></div><div class="ps" id="fp2"></div><div class="ps" id="fp3"></div><div class="ps" id="fp4"></div></div>
     <div id="fstep0">
       <div class="card"><div class="card-title">Identification</div>
         <div class="field"><label>Titre de la séance</label><input id="f-titre" type="text" placeholder="ex. Débat mouvant — liberté et autorité"></div>
         <div class="field"><label>Auteur(s)</label><input id="f-auteur" type="text" placeholder="Prénom NOM"></div>
         <div class="field"><label>Type de session</label>
           <div class="check-grid">
-            <div class="check-item" onclick="tog(this,'fsession','SFG')"><input type="checkbox"> Formation générale (SFG)</div>
-            <div class="check-item" onclick="tog(this,'fsession','SA')"><input type="checkbox"> Approfondissement (SA)</div>
+            <div class="check-item" onclick="tog(this,'fsession','SFG');updateContenusForm()"><input type="checkbox"> Formation générale (SFG)</div>
+            <div class="check-item" onclick="tog(this,'fsession','SA');updateContenusForm()"><input type="checkbox"> Approfondissement (SA)</div>
           </div>
         </div>
+        <div class="field" id="f-thematique-field" style="display:none"><label>Thématique</label><div class="check-grid cols1" id="f-thematique-grid"></div></div>
       </div>
       <div class="step-nav"><span></span><div class="step-nav-right"><button class="btn" onclick="retourListe()">Annuler</button><button class="btn primary" onclick="fs(1)">Suivant</button></div></div>
     </div>
-
-    <!-- STEP 1 -->
     <div id="fstep1" style="display:none">
       <div class="card"><div class="card-title">Contenu et objectif</div>
         <div class="field"><label>Contenu principal</label><div class="check-grid" id="fcontenu-grid"></div></div>
-        <div class="field" style="margin-top:.5rem"><label>Nature de l'objectif</label>
-          <div class="check-grid cols1">
-            <div class="check-item" onclick="tog(this,'fobjectif','transmettre')"><input type="checkbox"> Transmettre une connaissance (savoir précis, vérifiable)</div>
-            <div class="check-item" onclick="tog(this,'fobjectif','posture')"><input type="checkbox"> Construire une posture (réflexion, façon d'être)</div>
-            <div class="check-item" onclick="tog(this,'fobjectif','competence')"><input type="checkbox"> Développer une compétence opérationnelle (savoir-faire)</div>
-          </div>
+        <div class="field" style="margin-top:.5rem"><label>Formulation de l'objectif</label>
+          <textarea id="f-objectif" placeholder="À l'issue de cette séance, le stagiaire sera capable de..."></textarea>
+          <div class="field-hint">Sera enrichi avec les objectifs définis lors du week-end de rencontre.</div>
         </div>
-        <div class="field"><label>Formulation de l'objectif</label><textarea id="f-objectif" placeholder="À l'issue de cette séance, le stagiaire sera capable de..."></textarea></div>
       </div>
       <div class="step-nav"><button class="btn" onclick="fs(0)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="fs(2)">Suivant</button></div></div>
     </div>
-
-    <!-- STEP 2 -->
     <div id="fstep2" style="display:none">
       <div class="card"><div class="card-title">Connaissances à transmettre</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:.75rem">Listez les savoirs précis que le stagiaire devra avoir acquis (une ligne par savoir).</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:.75rem">Listez les savoirs précis que le stagiaire devra avoir acquis.</div>
         <div id="fconn-fields"></div>
       </div>
       <div class="step-nav"><button class="btn" onclick="fs(1)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="fs(3)">Suivant</button></div></div>
     </div>
-
-    <!-- STEP 3 -->
     <div id="fstep3" style="display:none">
       <div class="card"><div class="card-title">Déroulé en 3 phases</div>
         <div class="phase-form">
-          <div class="phase-form-row"><div class="phase-form-lbl l"><i class="ti ti-player-play" style="font-size:12px"></i>Lancement</div><textarea id="f-lancement" placeholder="Accroche, mise en situation, brise-glace..."></textarea></div>
-          <div class="phase-form-row"><div class="phase-form-lbl d"><i class="ti ti-tools" style="font-size:12px"></i>Développement</div><textarea id="f-dev" placeholder="Méthode principale, activité, apport formateur..."></textarea></div>
-          <div class="phase-form-row"><div class="phase-form-lbl c"><i class="ti ti-check" style="font-size:12px"></i>Clôture</div><textarea id="f-cloture" placeholder="Synthèse, vérification des acquis, question bilan..."></textarea></div>
+          <div class="phase-form-row"><div class="phase-form-lbl l"><i class="ti ti-player-play" style="font-size:12px"></i>Lancement</div><textarea id="f-lancement" placeholder="Accroche, mise en situation..."></textarea></div>
+          <div class="phase-form-row"><div class="phase-form-lbl d"><i class="ti ti-tools" style="font-size:12px"></i>Développement</div><textarea id="f-dev" placeholder="Méthode principale, activité, apport..."></textarea></div>
+          <div class="phase-form-row"><div class="phase-form-lbl c"><i class="ti ti-check" style="font-size:12px"></i>Clôture</div><textarea id="f-cloture" placeholder="Synthèse, vérification des acquis..."></textarea></div>
         </div>
         <div class="field"><label>Méthode principale</label><div class="check-grid" id="fmethode-grid"></div></div>
-        <div class="field"><label>Justification du choix de méthode</label><textarea id="f-justif" placeholder="Pourquoi cette méthode pour ce contenu et cet objectif ?"></textarea></div>
-        <div class="field"><label>Points de vigilance</label><textarea id="f-vigilance" placeholder="À quel moment le contenu doit-il primer sur la méthode ? Risques de dérive ?"></textarea></div>
+        <div class="field"><label>Justification</label><textarea id="f-justif" placeholder="Pourquoi cette méthode pour ce contenu ?"></textarea></div>
       </div>
       <div class="step-nav"><button class="btn" onclick="fs(2)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="fs(4)">Suivant</button></div></div>
     </div>
-
-    <!-- STEP 4 -->
     <div id="fstep4" style="display:none">
       <div class="card"><div class="card-title">Contexte et contraintes</div>
-        <div class="slider-row"><label style="font-size:13px;color:var(--text-muted);min-width:110px">Durée (min)</label><input type="range" min="30" max="240" step="15" value="90" id="f-duree" oninput="fsv()" style="flex:1;accent-color:var(--green)"><span class="slider-val" id="fsv-duree">90 min</span></div>
-        <div class="slider-row"><label style="font-size:13px;color:var(--text-muted);min-width:110px">Nb stagiaires</label><input type="range" min="5" max="30" step="1" value="12" id="f-stag" oninput="fsv()" style="flex:1;accent-color:var(--green)"><span class="slider-val" id="fsv-stag">12</span></div>
-        <div class="slider-row"><label style="font-size:13px;color:var(--text-muted);min-width:110px">Nb formateurs</label><input type="range" min="1" max="4" step="1" value="2" id="f-form" oninput="fsv()" style="flex:1;accent-color:var(--green)"><span class="slider-val" id="fsv-form">2</span></div>
-        <div class="field" style="margin-top:.5rem"><label>Salle disponible</label>
+        <div class="slider-row"><label>Durée (min)</label><input type="range" min="30" max="240" step="15" value="90" id="f-duree" oninput="fsv()"><span class="slider-val" id="fsv-duree">90 min</span></div>
+        <div class="slider-row"><label>Nb stagiaires</label><input type="range" min="5" max="30" step="1" value="12" id="f-stag" oninput="fsv()"><span class="slider-val" id="fsv-stag">12</span></div>
+        <div class="slider-row"><label>Nb formateurs</label><input type="range" min="1" max="4" step="1" value="2" id="f-form" oninput="fsv()"><span class="slider-val" id="fsv-form">2</span></div>
+        <div class="field" style="margin-top:.5rem"><label>Salle</label>
           <div class="check-grid">
             <div class="check-item" onclick="tog(this,'fsalle','Grande salle modulable')"><input type="checkbox"> Grande salle modulable</div>
             <div class="check-item" onclick="tog(this,'fsalle','Salle de classe standard')"><input type="checkbox"> Salle de classe standard</div>
@@ -317,186 +472,372 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg-surface
             <div class="check-item" onclick="tog(this,'fsalle','Plusieurs petites salles')"><input type="checkbox"> Plusieurs petites salles</div>
           </div>
         </div>
-        <div class="field"><label>Matériel disponible</label>
+        <div class="field"><label>Matériel</label>
           <div class="check-grid">
             <div class="check-item" onclick="tog(this,'fmateriel','Vidéoprojecteur + paperboard')"><input type="checkbox"> Vidéoprojecteur + paperboard</div>
             <div class="check-item" onclick="tog(this,'fmateriel','Paperboard uniquement')"><input type="checkbox"> Paperboard uniquement</div>
             <div class="check-item" onclick="tog(this,'fmateriel','Matériel complet')"><input type="checkbox"> Matériel complet</div>
-            <div class="check-item" onclick="tog(this,'fmateriel','Minimal')"><input type="checkbox"> Minimal (feuilles, stylos)</div>
+            <div class="check-item" onclick="tog(this,'fmateriel','Minimal')"><input type="checkbox"> Minimal</div>
           </div>
         </div>
       </div>
       <div class="step-nav"><button class="btn" onclick="fs(3)">Retour</button><div class="step-nav-right"><button class="btn primary" onclick="saveFiche()"><i class="ti ti-check" style="font-size:13px"></i> Enregistrer</button></div></div>
     </div>
   </div>
+  <div id="vue-confirmation" style="display:none">
+    <div class="confirm-screen">
+      <div class="confirm-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="confirm-title">Fiche enregistrée</div>
+      <div class="confirm-sub">Ajoutée à la bibliothèque en attente de validation.</div>
+      <div class="confirm-summary" id="confirm-summary"></div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="btn" onclick="showFormContrib()"><i class="ti ti-plus" style="font-size:13px"></i> Saisir une autre</button>
+        <button class="btn primary" onclick="showPage('recherche')"><i class="ti ti-search" style="font-size:13px"></i> Chercher une fiche</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const CONTENUS=['Liberté, autorité, sanction','Responsabilité civile et pénale','Laïcité','Violences sexistes et sexuelles','Connaissance des publics','Réglementation ACM','Construction d\'une grande animation','Positionnement de l\'animateur','Gestion sanitaire'];
+const CONTENUS_SFG=['Liberté, autorité, sanction','Responsabilité civile et pénale','Laïcité','Violences sexistes et sexuelles','Connaissance des publics','Réglementation ACM','Construction d\'une grande animation','Positionnement de l\'animateur','Gestion sanitaire'];
+const THEMATIQUES=[
+  {id:'jeux',label:'Jeux et grandes animations',icon:'ti-puzzle'},
+  {id:'loisirs',label:'Accueil de loisirs',icon:'ti-building-community'},
+  {id:'ville',label:'Animer en ville',icon:'ti-building-skyscraper'},
+  {id:'baignade',label:'Surveillant de baignade',icon:'ti-swimming'},
+  {id:'inclusif',label:'Accueil inclusif',icon:'ti-accessible'},
+  {id:'petite-enfance',label:'Petite enfance',icon:'ti-baby-carriage'},
+  {id:'sejours',label:'Séjours de vacances',icon:'ti-tent'},
+  {id:'mer',label:'Animer à la mer',icon:'ti-anchor'},
+  {id:'expression',label:'Expression et spectacle',icon:'ti-masks-theater'}
+];
+const CONTENUS_SA={
+  jeux:['Construction d\'une grande animation','Techniques de jeux','Scénarisation','Gestion de groupes importants','Sécurité des activités'],
+  loisirs:['Réglementation ACM','Projet pédagogique','Connaissance des publics','Gestion sanitaire','Rythmes de l\'enfant'],
+  ville:['Connaissance des publics','Partenariats locaux','Sécurité en espace urbain','Animation hors les murs','Positionnement de l\'animateur'],
+  baignade:['Réglementation baignade','Surveillance et prévention','Gestion des accidents aquatiques','Taux d\'encadrement baignade','Premiers secours'],
+  inclusif:['Handicap et accessibilité','Adaptation des activités','Réglementation accueil inclusif','Communication adaptée','Connaissance des publics spécifiques'],
+  'petite-enfance':['Développement 0-6 ans','Besoins fondamentaux','Gestion sanitaire','Réglementation petite enfance','Activités adaptées'],
+  sejours:['Réglementation séjours','Vie collective','Gestion sanitaire','Projet de séjour','Positionnement de l\'animateur'],
+  mer:['Sécurité en bord de mer','Réglementation baignade mer','Activités nautiques','Connaissance des publics','Gestion des risques'],
+  expression:['Techniques théâtrales','Scénarisation','Gestion de groupe','Construction d\'un spectacle','Positionnement de l\'animateur']
+};
+const CONNAISSANCES={
+  'Liberté, autorité, sanction':['Distinction liberté / licence','Cadre réglementaire de la sanction','Alternatives à la sanction punitive','Rôle du règlement intérieur','Droits de l\'enfant en ACM'],
+  'Responsabilité civile et pénale':['Définition responsabilité civile','Responsabilité pénale du fait d\'autrui','Obligations de surveillance','Déclaration d\'accident','Assurance et couverture'],
+  'Laïcité':['Principes fondamentaux','Application en ACM','Neutralité de l\'animateur','Gestion des signes religieux','Cas pratiques courants'],
+  'Violences sexistes et sexuelles':['Définitions légales','Signes de détresse à repérer','Procédure de signalement','Posture professionnelle','Cadre de protection de l\'enfance'],
+  'Connaissance des publics':['Stades de développement 3-17 ans','Besoins fondamentaux par tranche d\'âge','Rythmes biologiques','Développement socio-affectif','Adaptation des activités'],
+  'Réglementation ACM':['Taux d\'encadrement obligatoires','Normes d\'hygiène et sécurité','Obligations déclaratives','Règles d\'accueil des mineurs','Textes réglementaires'],
+  'Construction d\'une grande animation':['Définition des objectifs','Structure narrative','Rôles et répartition des équipes','Gestion du temps et de l\'espace','Évaluation'],
+  'Positionnement de l\'animateur':['Posture d\'adulte référent','Distance relationnelle','Gestion de l\'autorité','Communication non-violente','Cohérence éducative'],
+  'Gestion sanitaire':['Registre de soins','Gestion des traitements','Conduite à tenir en urgence','PAI et allergies','Protocoles réglementaires'],
+  'Techniques de jeux':['Règles et variantes','Adaptation par âge','Sécurité des jeux','Animation du jeu','Relance et dynamique'],
+  'Scénarisation':['Structure narrative','Rôles et personnages','Mise en scène','Gestion du temps','Implication des participants'],
+  'Gestion de groupes importants':['Sous-groupes et relais','Communication à grande échelle','Sécurité collective','Rythmes et temps forts','Coordination de l\'équipe'],
+  'Réglementation baignade':['Taux d\'encadrement baignade','Zones de baignade','Obligations déclaratives','Équipements obligatoires','Responsabilités'],
+  'Développement 0-6 ans':['Stades moteurs','Besoins affectifs','Rythmes de la petite enfance','Activités adaptées 0-3 ans','Activités adaptées 3-6 ans'],
+  'Techniques théâtrales':['Jeux d\'expression','Improvisation','Construction d\'un personnage','Diction et posture','Mise en scène simple']
+};
 const METHODES=['Débat mouvant','Jeu de rôle','Étude de cas','Travail en sous-groupes','Apport magistral','Photo-langage','Quiz / jeu pédagogique','Projet collectif','Simulation','Autre'];
 const FICHES_DEFAUT=[
-  {id:'d1',titre:'Le cadre légal en jeu de rôle',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Responsabilité civile et pénale','Réglementation ACM'],objectif:['transmettre'],objectifTexte:'Distinguer responsabilité civile et pénale et identifier ses obligations de surveillance',connaissances:['Définition responsabilité civile','Responsabilité pénale du fait d\'autrui','Obligations de surveillance','Déclaration d\'accident'],lancement:'Mise en situation : un accident survient pendant une activité. Que se passe-t-il ?',dev:'Jeu de rôle en sous-groupes : chaque groupe reçoit un scénario différent (chute, fugue, bagarre). Ils jouent la scène puis analysent les responsabilités engagées.',cloture:'Synthèse collective au paperboard. Le formateur clarifie les points de droit mal compris.',methode:['Jeu de rôle'],justif:'Le jeu de rôle permet de vivre la situation avant de l\'analyser. La charge émotionnelle rend le contenu mémorable.',vigilance:'La responsabilité pénale doit être exposée précisément — ne pas laisser le groupe avec une représentation approximative.',duree:90,stagiaires:20,formateurs:2,salle:['Grande salle modulable'],materiel:['Paperboard uniquement'],valide:true,createdAt:'2025-01-01'},
-  {id:'d2',titre:'Débat mouvant — liberté et autorité',auteur:'Équipe PACA',session:['SFG'],contenu:['Liberté, autorité, sanction','Positionnement de l\'animateur'],objectif:['posture'],objectifTexte:'Construire sa propre ligne de conduite sur l\'exercice de l\'autorité en ACM',connaissances:['Distinction liberté / licence','Rôle du règlement intérieur','Posture d\'adulte référent'],lancement:'Question provoc affichée : "Un animateur qui ne sanctionne jamais est un bon animateur." Les participants se positionnent dans la salle.',dev:'Débat mouvant sur 3 affirmations successives. Après chaque déplacement, 2-3 personnes expliquent leur choix.',cloture:'Le formateur nomme les tensions repérées et propose une synthèse sur la posture d\'adulte référent.',methode:['Débat mouvant'],justif:'Le débat mouvant exige de se positionner physiquement — cela oblige à sortir de l\'abstraction et à assumer un point de vue.',vigilance:'Ne pas laisser le groupe sur l\'idée que "tout se vaut". Clore sur des repères clairs.',duree:75,stagiaires:25,formateurs:1,salle:['Grande salle modulable'],materiel:['Minimal'],valide:true,createdAt:'2025-01-01'},
-  {id:'d3',titre:'Atelier VSS — repérer et signaler',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Violences sexistes et sexuelles'],objectif:['transmettre','competence'],objectifTexte:'Identifier les signes de détresse et appliquer la procédure de signalement',connaissances:['Définitions légales','Signes de détresse à repérer','Procédure de signalement','Posture professionnelle','Cadre de protection de l\'enfance'],lancement:'Vidéo courte (2 min) sur un témoignage fictif. Réaction à chaud du groupe.',dev:'Étude de cas en binômes : chaque binôme reçoit un scénario et doit identifier les signes, décider si signalement, et rédiger la démarche.',cloture:'Mise en commun. Le formateur apporte le cadre légal précis et la procédure CRIP.',methode:['Étude de cas'],justif:'Le cas concret ancre le contenu dans le réel. La VSS ne supporte pas les généralités.',vigilance:'Contenu sensible — prévoir un temps de décompression. Le cadre légal doit être exposé sans ambiguïté.',duree:120,stagiaires:16,formateurs:2,salle:['Plusieurs petites salles'],materiel:['Vidéoprojecteur + paperboard'],valide:true,createdAt:'2025-01-01'},
-  {id:'d4',titre:'Frises chronologiques — développement de l\'enfant',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Connaissance des publics'],objectif:['transmettre'],objectifTexte:'Identifier les grandes étapes du développement de 3 à 17 ans et adapter ses animations en conséquence',connaissances:['Stades de développement 3-17 ans','Besoins fondamentaux par tranche d\'âge','Rythmes biologiques','Développement socio-affectif'],lancement:'Photos d\'enfants de différents âges : "Qu\'est-ce que cet enfant est capable de faire ? Qu\'est-ce qui le préoccupe ?"',dev:'Par tranche d\'âge (3-6, 6-11, 11-14, 14-17), chaque groupe construit une frise avec les caractéristiques du public. Mise en commun en gallery walk.',cloture:'Le formateur complète les manques, corrige les approximations, et distribue une fiche de synthèse.',methode:['Travail en sous-groupes'],justif:'La construction active des frises mobilise les représentations existantes et permet au formateur d\'identifier les lacunes à combler.',vigilance:'Les représentations sur l\'adolescence sont souvent très stéréotypées. Prévoir un apport structuré sur ce point.',duree:90,stagiaires:20,formateurs:1,salle:['Grande salle modulable'],materiel:['Matériel complet'],valide:true,createdAt:'2025-01-01'},
-  {id:'d5',titre:'Quiz taux d\'encadrement',auteur:'Équipe PACA',session:['SFG','SA'],contenu:['Réglementation ACM'],objectif:['transmettre'],objectifTexte:'Mémoriser et appliquer les taux d\'encadrement réglementaires selon le type d\'accueil',connaissances:['Taux d\'encadrement obligatoires','Types d\'accueil et spécificités','Obligations déclaratives'],lancement:'Question ouverte : "Combien faut-il d\'animateurs pour 20 enfants de 6 ans ?" Recueil des réponses à main levée.',dev:'Quiz en équipes (Kahoot ou paperboard) : 10 situations différentes avec les taux à calculer. Les erreurs sont immédiatement expliquées.',cloture:'Récapitulatif visuel affiché. Chaque participant repart avec la fiche réglementaire.',methode:['Quiz / jeu pédagogique'],justif:'Les taux d\'encadrement sont des données précises et non négociables — le quiz crée la mémorisation par l\'enjeu et la répétition.',vigilance:'C\'est un contenu à transmission obligatoire : vérifier que tout le monde a la bonne réponse avant de clore.',duree:45,stagiaires:30,formateurs:1,salle:['Salle de classe standard'],materiel:['Vidéoprojecteur + paperboard'],valide:true,createdAt:'2025-01-01'}
+  {id:'d1',titre:'Le cadre légal en jeu de rôle',auteur:'Équipe PACA',session:['SFG','SA'],thematique:['loisirs'],contenu:['Responsabilité civile et pénale','Réglementation ACM'],objectifTexte:'Distinguer responsabilité civile et pénale et identifier ses obligations de surveillance',connaissances:['Définition responsabilité civile','Responsabilité pénale du fait d\'autrui','Obligations de surveillance','Déclaration d\'accident'],lancement:'Mise en situation : un accident survient. Que se passe-t-il ?',dev:'Jeu de rôle en sous-groupes sur des scénarios différents. Analyse des responsabilités.',cloture:'Synthèse au paperboard. Clarification des points de droit.',methode:['Jeu de rôle'],justif:'Le jeu de rôle permet de vivre la situation avant de l\'analyser.',vigilance:'La responsabilité pénale doit être exposée précisément.',duree:90,stagiaires:20,formateurs:2,salle:['Grande salle modulable'],materiel:['Paperboard uniquement'],valide:true,createdAt:'2025-01-01'},
+  {id:'d2',titre:'Débat mouvant — liberté et autorité',auteur:'Équipe PACA',session:['SFG'],thematique:[],contenu:['Liberté, autorité, sanction','Positionnement de l\'animateur'],objectifTexte:'Construire sa propre ligne de conduite sur l\'exercice de l\'autorité en ACM',connaissances:['Distinction liberté / licence','Rôle du règlement intérieur','Posture d\'adulte référent'],lancement:'Question provoc : "Un animateur qui ne sanctionne jamais est un bon animateur."',dev:'Débat mouvant sur 3 affirmations. Chaque déplacement est argumenté.',cloture:'Synthèse sur la posture d\'adulte référent.',methode:['Débat mouvant'],justif:'Le débat mouvant oblige à se positionner physiquement.',duree:75,stagiaires:25,formateurs:1,salle:['Grande salle modulable'],materiel:['Minimal'],valide:true,createdAt:'2025-01-01'},
+  {id:'d3',titre:'Atelier VSS — repérer et signaler',auteur:'Équipe PACA',session:['SFG','SA'],thematique:['loisirs','sejours'],contenu:['Violences sexistes et sexuelles'],objectifTexte:'Identifier les signes de détresse et appliquer la procédure de signalement',connaissances:['Définitions légales','Signes de détresse à repérer','Procédure de signalement','Posture professionnelle'],lancement:'Vidéo courte (2 min) sur un témoignage fictif.',dev:'Étude de cas en binômes : identifier les signes, décider du signalement.',cloture:'Mise en commun. Cadre légal et procédure CRIP.',methode:['Étude de cas'],justif:'Le cas concret ancre le contenu dans le réel.',duree:120,stagiaires:16,formateurs:2,salle:['Plusieurs petites salles'],materiel:['Vidéoprojecteur + paperboard'],valide:true,createdAt:'2025-01-01'},
+  {id:'d4',titre:'Frises chronologiques — développement',auteur:'Équipe PACA',session:['SFG','SA'],thematique:['loisirs','petite-enfance'],contenu:['Connaissance des publics'],objectifTexte:'Identifier les grandes étapes du développement de 3 à 17 ans',connaissances:['Stades de développement 3-17 ans','Besoins fondamentaux par tranche d\'âge','Rythmes biologiques'],lancement:'Photos d\'enfants de différents âges.',dev:'Construction de frises par tranche d\'âge. Gallery walk.',cloture:'Compléments du formateur et fiche de synthèse.',methode:['Travail en sous-groupes'],justif:'Active les représentations existantes.',duree:90,stagiaires:20,formateurs:1,salle:['Grande salle modulable'],materiel:['Matériel complet'],valide:true,createdAt:'2025-01-01'},
+  {id:'d5',titre:'Quiz taux d\'encadrement',auteur:'Équipe PACA',session:['SFG','SA'],thematique:['loisirs','sejours','baignade'],contenu:['Réglementation ACM'],objectifTexte:'Mémoriser et appliquer les taux d\'encadrement réglementaires',connaissances:['Taux d\'encadrement obligatoires','Obligations déclaratives'],lancement:'Question ouverte sur les taux.',dev:'Quiz en équipes sur 10 situations.',cloture:'Récapitulatif et fiche réglementaire.',methode:['Quiz / jeu pédagogique'],justif:'Le quiz crée la mémorisation par l\'enjeu.',duree:45,stagiaires:30,formateurs:1,salle:['Salle de classe standard'],materiel:['Vidéoprojecteur + paperboard'],valide:true,createdAt:'2025-01-01'},
+  {id:'d6',titre:'Construction d\'une grande animation',auteur:'Équipe PACA',session:['SA'],thematique:['jeux'],contenu:['Construction d\'une grande animation','Scénarisation'],objectifTexte:'Concevoir et coordonner une grande animation impliquant tout le groupe',connaissances:['Définition des objectifs','Structure narrative','Rôles et répartition des équipes'],lancement:'Déconstruction collective d\'exemples de grandes animations.',dev:'Projet collectif : chaque sous-groupe prend en charge une phase.',cloture:'Simulation partielle et débriefing.',methode:['Projet collectif'],justif:'Seul le faire permet de comprendre les enjeux de coordination.',duree:180,stagiaires:20,formateurs:2,salle:['Grande salle modulable'],materiel:['Matériel complet'],valide:true,createdAt:'2025-01-01'}
 ];
 
-let fstate={fsession:[],fcontenu:[],fobjectif:[],fmethode:[],fsalle:[],fmateriel:[]};
-let filters={session:[],objectif:[],contenu:[]};
+let rState={formation:null,thematique:null,objectif:null,contenus:[],connaissances:[]};
+let fstate={fsession:[],fcontenu:[],fmethode:[],fsalle:[],fmateriel:[],fthematique:[]};
 let editId=null;
-let fstepCurrent=0;
 
-function getDB(){
-  try{
-    const raw=localStorage.getItem('fiches_bafa');
-    if(!raw)return[...FICHES_DEFAUT];
-    const parsed=JSON.parse(raw);
-    return parsed.length?parsed:[...FICHES_DEFAUT];
-  }catch(e){return[...FICHES_DEFAUT]}
-}
-function saveDB(arr){try{localStorage.setItem('fiches_bafa',JSON.stringify(arr))}catch(e){}}
+function getDB(){try{const r=localStorage.getItem('fiches_bafa');if(!r)return[...FICHES_DEFAUT];const p=JSON.parse(r);return p.length?p:[...FICHES_DEFAUT]}catch(e){return[...FICHES_DEFAUT]}}
+function saveDB(a){try{localStorage.setItem('fiches_bafa',JSON.stringify(a))}catch(e){}}
 
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.style.display='block';
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;
+  el.style.display='block';el.style.animation='none';
+  requestAnimationFrame(()=>{el.style.animation='slideUp .25s ease'});
   setTimeout(()=>{el.style.display='none'},2500)
 }
 
-function showPage(id,btn){
+function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-  if(id==='recherche')renderResultats();
+  const tab=document.getElementById('tab-'+id);if(tab)tab.classList.add('active');
+  if(id==='accueil')renderAccueil();
+  if(id==='recherche'){resetRecherche();showView('r-step1')}
   if(id==='contribuer')renderContrib();
 }
 
-/* ─── RECHERCHE ─── */
-function toggleFilter(key,val,el){
-  el.classList.toggle('on');
-  if(el.classList.contains('on')){if(!filters[key].includes(val))filters[key].push(val)}
-  else{filters[key]=filters[key].filter(v=>v!==val)}
-  renderResultats();
-}
+function goAccueil(){showPage('accueil')}
 
-function resetRecherche(){
-  filters={session:[],objectif:[],contenu:[]};
-  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
-  document.getElementById('r-duree').value=120;
-  document.getElementById('r-stag').value=15;
-  renderResultats();
-}
-
-function renderResultats(){
-  const duree=+document.getElementById('r-duree').value;
-  const stag=+document.getElementById('r-stag').value;
-  document.getElementById('rv-duree').textContent=duree+' min';
-  document.getElementById('rv-stag').textContent=stag;
-  const db=getDB().filter(f=>f.valide!==false);
-  const scored=db.map(f=>{
-    let score=0,max=0;
-    if(filters.session.length){max+=3;if(filters.session.some(s=>f.session.includes(s)))score+=3}
-    if(filters.contenu.length){max+=3;if(filters.contenu.some(c=>f.contenu.includes(c)))score+=3}
-    if(filters.objectif.length){max+=2;if(filters.objectif.some(o=>f.objectif.includes(o)))score+=2}
-    max+=2;if(f.duree<=duree)score+=2;
-    max+=1;if(f.stagiaires>=stag)score+=1;
-    const pct=max>0?Math.round(score/max*100):80;
-    return{...f,pct,max}
-  }).filter(f=>f.pct>=40||filters.session.length+filters.contenu.length+filters.objectif.length===0)
-    .sort((a,b)=>b.pct-a.pct);
-
-  const el=document.getElementById('resultats');
-  document.getElementById('resultat-count').textContent=scored.length+' fiche'+(scored.length>1?'s':'')+(filters.session.length+filters.contenu.length+filters.objectif.length>0?' correspondante'+(scored.length>1?'s':''):' disponible'+(scored.length>1?'s':''));
-
-  if(!scored.length){
-    el.innerHTML='<div class="empty"><i class="ti ti-search-off"></i>Aucune fiche ne correspond à ces critères.<br>Essayez d\'élargir vos filtres.</div>';
-    return;
+function showView(id){
+  const views=document.querySelectorAll('#page-recherche .view');
+  views.forEach(v=>{
+    if(v.classList.contains('active')){
+      v.classList.remove('active');
+      v.style.display='none';
+    }
+  });
+  const el=document.getElementById(id);
+  if(el){
+    el.style.display='block';
+    requestAnimationFrame(()=>{el.classList.add('active')});
   }
-  el.innerHTML=scored.slice(0,6).map(f=>`
-    <div class="fiche-card">
+}
+
+function choisirFormation(type){
+  rState.formation=type;rState.thematique=null;rState.objectif=null;rState.contenus=[];rState.connaissances=[];
+  if(type==='SFG'){
+    buildContenusChips('contenu-chips-sfg',CONTENUS_SFG);
+    showView('r-step-contenu-sfg');
+  } else {
+    buildThematiques();
+    showView('r-step-thematique');
+  }
+}
+
+function buildThematiques(){
+  document.getElementById('thematiques-grid').innerHTML=THEMATIQUES.map(t=>`
+    <div class="choice-card" onclick="choisirThematique('${t.id}','${t.label}')">
+      <div class="choice-card-icon"><i class="ti ${t.icon}"></i></div>
+      <div class="choice-card-title">${t.label}</div>
+    </div>`).join('');
+}
+
+function choisirThematique(id,label){
+  rState.thematique=id;
+  ['crumb-th1','crumb-th2','crumb-th3'].forEach(c=>{const el=document.getElementById(c);if(el)el.textContent=label});
+  const list=CONTENUS_SA[id]?[...new Set([...CONTENUS_SFG,...CONTENUS_SA[id]])]:CONTENUS_SFG;
+  buildContenusChips('contenu-chips-sa',list);
+  showView('r-step-contenu-sa');
+}
+
+function buildContenusChips(containerId,list){
+  const el=document.getElementById(containerId);if(!el)return;
+  el.innerHTML=list.map(c=>`<div class="chip" onclick="toggleContenu('${c.replace(/'/g,"\\'")}',this)">${c}</div>`).join('');
+}
+
+function toggleContenu(val,el){
+  el.classList.toggle('on');
+  if(el.classList.contains('on')){if(!rState.contenus.includes(val))rState.contenus.push(val)}
+  else{rState.contenus=rState.contenus.filter(v=>v!==val)}
+}
+
+function goConnaissances(session){
+  const conns=[...new Set(rState.contenus.flatMap(c=>CONNAISSANCES[c]||[]))];
+  const listId=session==='SFG'?'conn-list-sfg':'conn-list-sa';
+  const nextView=session==='SFG'?'r-step-conn-sfg':'r-step-conn-sa';
+  const el=document.getElementById(listId);
+  if(!conns.length){el.innerHTML='<div style="font-size:13px;color:var(--text-muted);padding:.5rem 0">Sélectionnez d\'abord un contenu à l\'étape précédente.</div>'}
+  else{el.innerHTML=conns.map(c=>`<div class="conn-item" onclick="toggleConn('${c.replace(/'/g,"\\'")}',this)"><input type="checkbox"> ${c}</div>`).join('')}
+  rState.connaissances=[];
+
+  const objList=getObjectifsFromDB(session,rState.thematique);
+  const objId=session==='SFG'?'objectifs-sfg':'objectifs-sa';
+  const emptyId=session==='SFG'?'objectif-empty-sfg':'objectif-empty-sa';
+  document.getElementById(objId).innerHTML=objList.map(o=>`<div class="objectif-item" onclick="choisirObjectif('${o.replace(/'/g,"\\'")}',this)">${o}</div>`).join('');
+  document.getElementById(emptyId).style.display=objList.length?'none':'block';
+  showView(session==='SFG'?'r-step-objectif-sfg':'r-step-objectif-sa');
+}
+
+function getObjectifsFromDB(session,thematique){
+  return[...new Set(getDB().filter(f=>f.valide&&f.session.includes(session)&&(!thematique||(f.thematique&&f.thematique.includes(thematique)))).map(f=>f.objectifTexte).filter(Boolean))];
+}
+
+function choisirObjectif(val,el){
+  document.querySelectorAll('.objectif-item.selected').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');rState.objectif=val;
+}
+
+function toggleConn(val,el){
+  const cb=el.querySelector('input');el.classList.toggle('on');cb.checked=el.classList.contains('on');
+  if(el.classList.contains('on')){if(!rState.connaissances.includes(val))rState.connaissances.push(val)}
+  else{rState.connaissances=rState.connaissances.filter(v=>v!==val)}
+}
+
+function lancerRecherche(session){
+  const db=getDB().filter(f=>f.valide);
+  const scored=db.map(f=>{
+    let score=0,max=0;const details=[];
+    max+=3;const okS=f.session.includes(session);if(okS)score+=3;details.push({label:'Type de session',ok:okS});
+    if(session==='SA'&&rState.thematique){max+=3;const okT=f.thematique&&f.thematique.includes(rState.thematique);if(okT)score+=3;details.push({label:'Thématique',ok:okT})}
+    if(rState.contenus.length){max+=3;const okC=rState.contenus.some(c=>f.contenu.includes(c));if(okC)score+=3;details.push({label:'Contenu',ok:okC})}
+    if(rState.connaissances.length){const m=rState.connaissances.filter(c=>(f.connaissances||[]).includes(c)).length;max+=3;if(m>0)score+=Math.min(m,3);details.push({label:'Connaissances',ok:m>0})}
+    if(rState.objectif){max+=2;const okO=f.objectifTexte===rState.objectif;if(okO)score+=2;details.push({label:'Objectif',ok:okO})}
+    const pct=max>0?Math.round(score/max*100):80;
+    return{...f,pct,details}
+  }).filter(f=>f.pct>=25).sort((a,b)=>b.pct-a.pct);
+
+  const thLabel=rState.thematique?THEMATIQUES.find(t=>t.id===rState.thematique)?.label:'';
+  document.getElementById('resultats-breadcrumb').innerHTML=`
+    <span class="crumb">${session==='SFG'?'Formation générale':'Approfondissement'}</span>
+    ${thLabel?`<span class="crumb-sep">›</span><span class="crumb">${thLabel}</span>`:''}
+    <span class="crumb-sep">›</span><span class="crumb active">Résultats</span>`;
+  document.getElementById('resultats-back-btn').onclick=()=>showView(session==='SFG'?'r-step-conn-sfg':'r-step-conn-sa');
+  document.getElementById('resultats-count').textContent=scored.length+' fiche'+(scored.length>1?'s':'');
+
+  const el=document.getElementById('resultats-list');
+  if(!scored.length){
+    el.innerHTML='<div class="empty"><i class="ti ti-search-off"></i>Aucune fiche ne correspond.<br>La bibliothèque s\'enrichira après le week-end de rencontre.</div>';
+    showView('r-resultats');return;
+  }
+  el.innerHTML=scored.slice(0,6).map((f,i)=>{
+    const tt=f.details.map(d=>`<div class="score-item"><span class="${d.ok?'ok':'ko'}">${d.ok?'✓':'✗'}</span> ${d.label}</div>`).join('');
+    return`<div class="fiche-card" id="fc-${f.id}" style="transition-delay:${i*60}ms">
       <div class="fiche-card-head">
-        <div>
+        <div style="flex:1;min-width:0;overflow:hidden">
           <div class="fiche-titre">${f.titre}</div>
-          <div class="fiche-meta" style="margin:4px 0 6px">${f.auteur||''} · ${f.duree} min · ${f.stagiaires} stagiaires max</div>
-          <div>${f.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${f.methode&&f.methode.length?f.methode.map(m=>`<span class="badge" style="background:#EEEDFE;color:#3C3489">${m}</span>`).join(''):''}</div>
+          <div class="fiche-meta">${f.auteur||''} · ${f.duree} min · ${f.stagiaires} stagiaires max</div>
+          <div style="margin-top:5px;overflow:hidden">${f.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${f.methode&&f.methode.length?f.methode.map(m=>`<span class="badge" style="background:#EEEDFE;color:#3C3489;overflow:hidden;text-overflow:ellipsis;max-width:120px">${m}</span>`).join(''):''}</div>
         </div>
         <div class="score-pill">
           <div class="score-num">${f.pct}%</div>
           <div style="font-size:10px;color:var(--text-muted)">correspondance</div>
           <div class="score-bar"><div class="score-fill" style="width:${f.pct}%"></div></div>
+          <div class="score-tooltip">${tt}</div>
         </div>
       </div>
       <div class="fiche-card-body">
         ${f.objectifTexte?`<div class="fiche-row"><span class="k">Objectif</span><span class="v">${f.objectifTexte}</span></div>`:''}
         ${f.connaissances&&f.connaissances.length?`<div class="fiche-row"><span class="k">Connaissances</span><span class="v">${f.connaissances.join(' · ')}</span></div>`:''}
-        ${(f.lancement||f.dev||f.cloture)?`
-        <div class="phase-block">
-          ${f.lancement?`<div class="phase-row"><div class="phase-lbl" style="color:var(--green-dark);border-left:3px solid var(--green)"><i class="ti ti-player-play" style="font-size:11px"></i> Lancement</div><div class="phase-txt">${f.lancement}</div></div>`:''}
-          ${f.dev?`<div class="phase-row"><div class="phase-lbl" style="color:var(--blue-dark);border-left:3px solid var(--blue)"><i class="ti ti-tools" style="font-size:11px"></i> Développement</div><div class="phase-txt">${f.dev}</div></div>`:''}
-          ${f.cloture?`<div class="phase-row"><div class="phase-lbl" style="color:var(--amber);border-left:3px solid var(--amber)"><i class="ti ti-check" style="font-size:11px"></i> Clôture</div><div class="phase-txt">${f.cloture}</div></div>`:''}
+        ${(f.lancement||f.dev||f.cloture)?`<div class="phase-block">
+          ${f.lancement?`<div class="phase-row"><div class="phase-lbl" style="color:var(--orange-darker);border-left:3px solid var(--orange)"><i class="ti ti-player-play" style="font-size:11px"></i> Lancement</div><div class="phase-txt">${f.lancement}</div></div>`:''}
+          ${f.dev?`<div class="phase-row"><div class="phase-lbl" style="color:#0C447C;border-left:3px solid #378ADD"><i class="ti ti-tools" style="font-size:11px"></i> Développement</div><div class="phase-txt">${f.dev}</div></div>`:''}
+          ${f.cloture?`<div class="phase-row"><div class="phase-lbl" style="color:var(--red-dark);border-left:3px solid var(--red)"><i class="ti ti-check" style="font-size:11px"></i> Clôture</div><div class="phase-txt">${f.cloture}</div></div>`:''}
         </div>`:''}
-        ${f.vigilance?`<div class="fiche-row"><span class="k" style="color:var(--red-dark)"><i class="ti ti-alert-triangle" style="font-size:12px"></i> Vigilance</span><span class="v">${f.vigilance}</span></div>`:''}
-        <div style="margin-top:.5rem">${f.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}</div>
+        <div style="margin-top:.5rem;overflow:hidden">${f.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}</div>
       </div>
-    </div>
-  `).join('');
+      <div class="fiche-card-actions">
+        <button class="btn sm outline-orange" onclick="imprimerFiche('${f.id}')"><i class="ti ti-printer" style="font-size:13px"></i> Imprimer</button>
+        <button class="btn sm" onclick="copierFiche('${f.id}')"><i class="ti ti-copy" style="font-size:13px"></i> Copier</button>
+      </div>
+    </div>`
+  }).join('');
+
+  showView('r-resultats');
+  // Animation cascade des fiches
+  setTimeout(()=>{
+    scored.slice(0,6).forEach((f,i)=>{
+      setTimeout(()=>{
+        const el=document.getElementById('fc-'+f.id);
+        if(el)el.classList.add('visible');
+      },i*80);
+    });
+  },100);
 }
 
-/* ─── CONTRIBUER ─── */
+function resetRecherche(){
+  rState={formation:null,thematique:null,objectif:null,contenus:[],connaissances:[]};
+  showView('r-step1');
+}
+
+function imprimerFiche(id){
+  const f=getDB().find(x=>x.id===id);if(!f)return;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>${f.titre}</title>
+  <style>body{font-family:-apple-system,sans-serif;padding:2rem;color:#1a1a1a;max-width:700px;margin:0 auto}
+  h1{font-size:20px;margin-bottom:.5rem}.meta{font-size:12px;color:#666;margin-bottom:1.5rem}
+  .section{margin-bottom:1.25rem}.section h2{font-size:13px;font-weight:600;color:#C4721E;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;border-bottom:1px solid #e0e0da;padding-bottom:4px}
+  .section p{font-size:13px;line-height:1.6}
+  .phase{display:grid;grid-template-columns:90px 1fr;border:1px solid #e0e0da;margin-bottom:4px}
+  .phase-l{padding:8px 10px;font-size:12px;font-weight:600;background:#f7f7f5;border-right:1px solid #e0e0da;white-space:nowrap}
+  .phase-t{padding:8px 10px;font-size:12px;line-height:1.5;word-break:break-word}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;background:#f1f1ee;border-radius:10px;margin:2px}
+  @media print{button{display:none}}</style></head><body>
+  <h1>${f.titre}</h1>
+  <div class="meta">${f.auteur||''} · ${f.session.join(', ')} · ${f.duree} min · ${f.stagiaires} stagiaires max</div>
+  ${f.objectifTexte?`<div class="section"><h2>Objectif</h2><p>${f.objectifTexte}</p></div>`:''}
+  ${f.connaissances&&f.connaissances.length?`<div class="section"><h2>Connaissances transmises</h2><p>${f.connaissances.map(c=>`<span class="tag">${c}</span>`).join('')}</p></div>`:''}
+  <div class="section"><h2>Déroulé</h2>
+    ${f.lancement?`<div class="phase"><div class="phase-l" style="color:#C4721E">Lancement</div><div class="phase-t">${f.lancement}</div></div>`:''}
+    ${f.dev?`<div class="phase"><div class="phase-l" style="color:#0C447C">Développement</div><div class="phase-t">${f.dev}</div></div>`:''}
+    ${f.cloture?`<div class="phase"><div class="phase-l" style="color:#D93E43">Clôture</div><div class="phase-t">${f.cloture}</div></div>`:''}
+  </div>
+  ${f.methode&&f.methode.length?`<div class="section"><h2>Méthode</h2><p>${f.methode.join(', ')}</p>${f.justif?`<p style="margin-top:.5rem;font-style:italic;color:#555">${f.justif}</p>`:''}</div>`:''}
+  <div class="section"><h2>Contexte</h2><p>Durée : ${f.duree} min · Stagiaires : ${f.stagiaires} max · Formateurs : ${f.formateurs||1} min.<br>Salle : ${(f.salle||[]).join(', ')||'—'} · Matériel : ${(f.materiel||[]).join(', ')||'—'}</p></div>
+  <script>window.print();<\/script></body></html>`);
+  w.document.close();
+}
+
+function copierFiche(id){
+  const f=getDB().find(x=>x.id===id);if(!f)return;
+  const txt=[`FICHE SÉANCE — ${f.titre}`,`${f.auteur||''} · ${f.session.join(', ')} · ${f.duree} min`,``,`OBJECTIF : ${f.objectifTexte||'—'}`,``,`CONNAISSANCES : ${(f.connaissances||[]).join(' / ')}`,``,`LANCEMENT : ${f.lancement||'—'}`,`DÉVELOPPEMENT : ${f.dev||'—'}`,`CLÔTURE : ${f.cloture||'—'}`,``,`MÉTHODE : ${(f.methode||[]).join(', ')}`,f.justif?`Justification : ${f.justif}`:''].filter(l=>l!==undefined).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>showToast('Fiche copiée dans le presse-papier'));
+}
+
+function renderAccueil(){
+  const db=getDB();
+  document.getElementById('accueil-stats').innerHTML=`
+    <div class="accueil-stat"><div class="n">${db.filter(f=>f.valide).length}</div><div class="l">Fiches validées</div></div>
+    <div class="accueil-stat"><div class="n">${[...new Set(db.flatMap(f=>f.contenu))].length}</div><div class="l">Contenus couverts</div></div>
+    <div class="accueil-stat"><div class="n">${db.length}</div><div class="l">Fiches au total</div></div>`;
+}
+
 function renderContrib(){
   const db=getDB();
-  const valides=db.filter(f=>f.valide).length;
-  const contenus=[...new Set(db.flatMap(f=>f.contenu))].length;
   document.getElementById('stats-contrib').innerHTML=`
     <div class="stat-card"><div class="stat-n">${db.length}</div><div class="stat-l">Fiches saisies</div></div>
-    <div class="stat-card"><div class="stat-n">${valides}</div><div class="stat-l">Validées</div></div>
-    <div class="stat-card"><div class="stat-n">${contenus}</div><div class="stat-l">Contenus couverts</div></div>
-  `;
+    <div class="stat-card"><div class="stat-n">${db.filter(f=>f.valide).length}</div><div class="stat-l">Validées</div></div>
+    <div class="stat-card"><div class="stat-n">${[...new Set(db.flatMap(f=>f.contenu))].length}</div><div class="stat-l">Contenus couverts</div></div>`;
   const el=document.getElementById('liste-contrib');
-  if(!db.length){el.innerHTML='<div class="empty"><i class="ti ti-file-plus"></i>Aucune fiche. Cliquez sur "Nouvelle fiche" pour commencer.</div>';return}
+  if(!db.length){el.innerHTML='<div class="empty"><i class="ti ti-file-plus"></i>Aucune fiche.</div>';return}
   el.innerHTML=db.map(f=>`
     <div class="fiche-item">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:14px;font-weight:600;margin-bottom:4px">${f.titre||'(sans titre)'}</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:5px">${f.auteur||''} · ${f.duree} min · ${f.stagiaires} stagiaires</div>
-        <div>${f.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${f.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}<span class="badge ${f.valide?'valide':'attente'}">${f.valide?'Validée':'En attente'}</span></div>
+      <div class="fiche-item-left">
+        <div class="fiche-item-title">${f.titre||'(sans titre)'}</div>
+        <div class="fiche-item-meta">${f.auteur||''} · ${f.duree} min · ${f.stagiaires} stagiaires</div>
+        <div style="overflow:hidden">${f.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${f.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}<span class="badge ${f.valide?'valide':'attente'}">${f.valide?'Validée':'En attente'}</span></div>
       </div>
       <div class="fiche-item-actions">
-        <button class="btn sm" onclick="toggleValide('${f.id}')" title="${f.valide?'Retirer validation':'Valider'}"><i class="ti ti-${f.valide?'x':'check'}"></i></button>
+        <button class="btn sm" onclick="toggleValide('${f.id}')"><i class="ti ti-${f.valide?'x':'check'}"></i></button>
         <button class="btn sm danger" onclick="deleteFiche('${f.id}')"><i class="ti ti-trash"></i></button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function showFormContrib(id=null){
   editId=id;
-  fstate={fsession:[],fcontenu:[],fobjectif:[],fmethode:[],fsalle:[],fmateriel:[]};
-  buildCheckGridF('fcontenu-grid',CONTENUS,'fcontenu');
+  fstate={fsession:[],fcontenu:[],fmethode:[],fsalle:[],fmateriel:[],fthematique:[]};
+  buildCheckGridF('fcontenu-grid',CONTENUS_SFG,'fcontenu');
   buildCheckGridF('fmethode-grid',METHODES,'fmethode');
+  buildThematiqueGrid();
   buildConnF();
-  ['f-titre','f-auteur','f-objectif','f-lancement','f-dev','f-cloture','f-justif','f-vigilance'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});
-  document.getElementById('f-duree').value=90;
-  document.getElementById('f-stag').value=12;
-  document.getElementById('f-form').value=2;
-  fsv();
+  ['f-titre','f-auteur','f-objectif','f-lancement','f-dev','f-cloture','f-justif'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});
+  document.getElementById('f-duree').value=90;document.getElementById('f-stag').value=12;document.getElementById('f-form').value=2;fsv();
+  document.getElementById('f-thematique-field').style.display='none';
   if(id){const f=getDB().find(x=>x.id===id);if(f)populateF(f)}
   document.getElementById('form-titre-page').textContent=id?'Modifier la fiche':'Nouvelle fiche';
-  fstepCurrent=0;fss(0);
+  fss(0);
   document.getElementById('vue-liste-contrib').style.display='none';
+  document.getElementById('vue-confirmation').style.display='none';
   document.getElementById('vue-form-contrib').style.display='block';
 }
 
+function buildThematiqueGrid(){
+  const el=document.getElementById('f-thematique-grid');if(!el)return;
+  el.innerHTML=THEMATIQUES.map(t=>`<div class="check-item" onclick="tog(this,'fthematique','${t.id}');updateContenusForm()"><input type="checkbox"> ${t.label}</div>`).join('');
+}
+
+function updateContenusForm(){
+  const hasSA=fstate.fsession.includes('SA');
+  document.getElementById('f-thematique-field').style.display=hasSA?'block':'none';
+  const th=fstate.fthematique[0];
+  const list=hasSA&&th&&CONTENUS_SA[th]?[...new Set([...CONTENUS_SFG,...CONTENUS_SA[th]])]:CONTENUS_SFG;
+  buildCheckGridF('fcontenu-grid',list,'fcontenu');
+}
+
 function buildCheckGridF(id,items,key){
-  const el=document.getElementById(id);
-  if(!el)return;
+  const el=document.getElementById(id);if(!el)return;
   el.innerHTML=items.map(item=>`<div class="check-item" onclick="tog(this,'${key}','${item.replace(/'/g,"\\'")}')"><input type="checkbox"> ${item}</div>`).join('');
 }
 
 function buildConnF(){
-  const el=document.getElementById('fconn-fields');
-  if(!el)return;
+  const el=document.getElementById('fconn-fields');if(!el)return;
   el.innerHTML=[1,2,3,4,5].map(i=>`<div class="field"><label>Connaissance ${i}</label><input type="text" id="fconn-${i}" placeholder="Savoir précis que le stagiaire devra avoir acquis"></div>`).join('');
 }
 
@@ -508,32 +849,27 @@ function populateF(f){
   document.getElementById('f-dev').value=f.dev||'';
   document.getElementById('f-cloture').value=f.cloture||'';
   document.getElementById('f-justif').value=f.justif||'';
-  document.getElementById('f-vigilance').value=f.vigilance||'';
   document.getElementById('f-duree').value=f.duree||90;
   document.getElementById('f-stag').value=f.stagiaires||12;
-  document.getElementById('f-form').value=f.formateurs||2;
-  fsv();
-  fstate.fsession=f.session||[];fstate.fcontenu=f.contenu||[];
-  fstate.fobjectif=f.objectif||[];fstate.fmethode=f.methode||[];
-  fstate.fsalle=f.salle||[];fstate.fmateriel=f.materiel||[];
+  document.getElementById('f-form').value=f.formateurs||2;fsv();
+  fstate.fsession=f.session||[];fstate.fcontenu=f.contenu||[];fstate.fmethode=f.methode||[];
+  fstate.fsalle=f.salle||[];fstate.fmateriel=f.materiel||[];fstate.fthematique=f.thematique||[];
   (f.connaissances||[]).forEach((c,i)=>{const e=document.getElementById('fconn-'+(i+1));if(e)e.value=c});
   setTimeout(()=>{
     document.querySelectorAll('.check-item').forEach(el=>{
       const cb=el.querySelector('input');if(!cb)return;
       const m=el.getAttribute('onclick').match(/'([^']+)','([^']+)'/);if(!m)return;
-      const k=m[1],v=m[2];
-      if(fstate[k]&&fstate[k].includes(v)){el.classList.add('on');cb.checked=true}
-    })
+      const k=m[1],v=m[2];if(fstate[k]&&fstate[k].includes(v)){el.classList.add('on');cb.checked=true}
+    });updateContenusForm();
   },50);
 }
 
 function tog(el,key,val){
-  const cb=el.querySelector('input');
-  const on=el.classList.toggle('on');
-  cb.checked=on;
+  const cb=el.querySelector('input');const on=el.classList.toggle('on');cb.checked=on;
   if(!fstate[key])fstate[key]=[];
   if(on){if(!fstate[key].includes(val))fstate[key].push(val)}
   else{fstate[key]=fstate[key].filter(v=>v!==val)}
+  if(key==='fsession')updateContenusForm();
 }
 
 function fsv(){
@@ -545,15 +881,12 @@ function fsv(){
 function fs(n){fss(n)}
 function fss(n){
   for(let i=0;i<5;i++){document.getElementById('fstep'+i).style.display=i===n?'block':'none'}
-  fstepCurrent=n;
-  for(let i=0;i<5;i++){
-    const el=document.getElementById('fp'+i);
-    el.className='ps'+(i<n?' done':i===n?' active':'');
-  }
+  for(let i=0;i<5;i++){const el=document.getElementById('fp'+i);el.className='ps'+(i<n?' done':i===n?' active':'')}
 }
 
 function retourListe(){
   document.getElementById('vue-form-contrib').style.display='none';
+  document.getElementById('vue-confirmation').style.display='none';
   document.getElementById('vue-liste-contrib').style.display='block';
   renderContrib();
 }
@@ -564,41 +897,39 @@ function saveFiche(){
     id:editId||Date.now().toString(),
     titre:document.getElementById('f-titre').value.trim(),
     auteur:document.getElementById('f-auteur').value.trim(),
-    session:fstate.fsession,contenu:fstate.fcontenu,
-    objectif:fstate.fobjectif,objectifTexte:document.getElementById('f-objectif').value.trim(),
-    connaissances,
-    lancement:document.getElementById('f-lancement').value.trim(),
-    dev:document.getElementById('f-dev').value.trim(),
-    cloture:document.getElementById('f-cloture').value.trim(),
+    session:fstate.fsession,thematique:fstate.fthematique,
+    contenu:fstate.fcontenu,objectifTexte:document.getElementById('f-objectif').value.trim(),
+    connaissances,lancement:document.getElementById('f-lancement').value.trim(),
+    dev:document.getElementById('f-dev').value.trim(),cloture:document.getElementById('f-cloture').value.trim(),
     methode:fstate.fmethode,justif:document.getElementById('f-justif').value.trim(),
-    duree:+document.getElementById('f-duree').value,
-    stagiaires:+document.getElementById('f-stag').value,
-    formateurs:+document.getElementById('f-form').value,
-    salle:fstate.fsalle,materiel:fstate.fmateriel,
-    vigilance:document.getElementById('f-vigilance').value.trim(),
+    duree:+document.getElementById('f-duree').value,stagiaires:+document.getElementById('f-stag').value,
+    formateurs:+document.getElementById('f-form').value,salle:fstate.fsalle,materiel:fstate.fmateriel,
     valide:false,createdAt:new Date().toISOString()
   };
   const db=getDB();
   if(editId){const idx=db.findIndex(f=>f.id===editId);if(idx>-1){fiche.valide=db[idx].valide;db[idx]=fiche}else db.push(fiche)}
   else db.push(fiche);
-  saveDB(db);toast('Fiche enregistrée');retourListe();
+  saveDB(db);
+  document.getElementById('vue-form-contrib').style.display='none';
+  document.getElementById('confirm-summary').innerHTML=`
+    <div style="font-size:14px;font-weight:600;margin-bottom:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fiche.titre||'(sans titre)'}</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fiche.auteur||''} · ${fiche.duree} min</div>
+    <div style="overflow:hidden">${fiche.session.map(s=>`<span class="badge ${s.toLowerCase()}">${s}</span>`).join('')}${fiche.contenu.map(c=>`<span class="badge content">${c}</span>`).join('')}</div>
+    ${fiche.objectifTexte?`<div style="font-size:12px;margin-top:.75rem;color:var(--text-muted);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">Objectif : <span style="color:var(--text)">${fiche.objectifTexte}</span></div>`:''}`;
+  document.getElementById('vue-confirmation').style.display='block';
 }
 
-function toggleValide(id){
-  const db=getDB();const f=db.find(x=>x.id===id);
-  if(f){f.valide=!f.valide;saveDB(db);renderContrib()}
-}
+function toggleValide(id){const db=getDB();const f=db.find(x=>x.id===id);if(f){f.valide=!f.valide;saveDB(db);renderContrib()}}
 function deleteFiche(id){saveDB(getDB().filter(f=>f.id!==id));renderContrib()}
 
 function exportJSON(){
-  const db=getDB();
-  if(!db.length){toast('Aucune fiche à exporter');return}
+  const db=getDB();if(!db.length){showToast('Aucune fiche à exporter');return}
   const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='fiches_bafa_'+new Date().toISOString().slice(0,10)+'.json';a.click();
 }
 
-renderResultats();
+renderAccueil();
 </script>
 </body>
 </html>
